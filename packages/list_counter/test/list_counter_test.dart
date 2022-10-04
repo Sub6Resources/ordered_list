@@ -14,7 +14,6 @@ void main() {
     counter.increment();
 
     expect(counter.value, equals(2));
-
   });
 
   test('Custom increment counter test', () {
@@ -85,7 +84,6 @@ void main() {
 
     expect(styleToUse.generateCounterContent(counter.value), equals('12'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('12. '));
-
   });
 
   test('Padded CounterStyle test', () {
@@ -111,7 +109,6 @@ void main() {
 
     expect(styleToUse.generateCounterContent(counter.value), equals('112'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('112. '));
-
   });
 
   test('Negative padded CounterStyle test', () {
@@ -137,7 +134,6 @@ void main() {
 
     expect(styleToUse.generateCounterContent(counter.value), equals('-112'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('-112. '));
-
   });
 
   test('Hiragana CounterStyle test', () {
@@ -153,7 +149,6 @@ void main() {
 
     expect(styleToUse.generateCounterContent(counter.value), equals('い'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('い、'));
-
   });
 
   test('Alphabetic CounterStyle Wrapping Test', () {
@@ -184,7 +179,6 @@ void main() {
 
     expect(styleToUse.generateCounterContent(counter.value), equals('ab'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('ab. '));
-
   });
 
   test('Counter out of range', () {
@@ -200,7 +194,6 @@ void main() {
 
     expect(styleToUse.generateCounterContent(counter.value), equals('10001'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('10001. '));
-
   });
 
   test('Test additive system - roman numerals', () {
@@ -256,7 +249,6 @@ void main() {
 
     expect(styleToUse.generateCounterContent(counter.value), equals('MMXLIX'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('MMXLIX. '));
-
   });
 
   //TODO test fixed, cyclic, complex (once they are added)
