@@ -1,39 +1,83 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+A `Counter` class that follows the specification outlined at https://www.w3.org/TR/css-lists-3/#auto-numbering.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+The `CounterStyle` class represents styles that can be used to generate a 
+text representation of the given counter's value (such as a 'iv' for 4,
+ or 'β' for 2).
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+See https://www.w3.org/TR/css-counter-styles-3/#counter-styles for more details.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Getting started is simple:
+
+```yaml
+dependencies:
+  ordered_list: ^0.0.1
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+void main() {
+  final counter = Counter('named_counter'); //You can also start a counter at a specific integer value with Counter('name', VALUE);
+  final listStyle = PredefinedCounterStyles.upperRoman;
+  
+  counter.increment(); // Adds 1 to the counter
+  print(listStyle.generateMarkerContent(counter.value));
+  // Prints "I. "
+ 
+  counter.increment(2021); // Now the counter is at 2022
+  print(listStyle.generateMarkerContent(conter.value));
+  // Prints "MMXXII. "
+ 
+  // Optionally, you can just print the result of the algorithm without any suffixes:
+  print(listStyle.generateCounterContent(counter.value));
+  // Prints "MMXXII"
+}
 ```
 
-## Additional information
+## Predefined List Styles
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+A lengthy list of predefined counter styles is included!
+
+Some of the most basic include:
+`PredefinedCounterStyles.decimal` (A simple ordered list)
+`PredefinedCounterStyles.disc` (A simple bulleted/unordered list)
+`PredefinedCounterStyles.circle` (A bulleted list with open circles)
+`PredefinedCounterStyles.square` (A bulleted list with square bullets)
+`PredefinedCounterStyles.lowerAlpha` (e.g., a, b, c, ..., z, aa, ab)
+
+As well as dozens of language-specific number systems, such as:
+`PredefinedCounterStyles.cjkDecimal` (i.e. 〇 一 二 三 四 五 六 七 八 九 ...)
+`PredefinedCounterStyles.cambodian` (i.e. ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ...)
+`PredefinedCounterStyles.katakana` (i.e. ア イ ウ エ オ カ キ ク ...)
+
+See https://www.w3.org/TR/css-counter-styles-3/#predefined-counters for the full list.
+
+Or, you can define your own style:
+
+```dart
+// Sample additive style taken from https://www.w3.org/TR/css-counter-styles-3/#additive-system
+final diceStyle = CounterStyle.define(
+  name: 'dice-style',
+  system: system.additive,
+  additiveSymbols: {6: '⚅', 5: '⚄', 4: '⚃', 3: '⚂', 2: '⚁', 1: '⚀'},
+  suffix: " ",
+);
+```
+
+`diceStyle` will then produce lists that look like:
+
+```
+⚀  One
+⚁  Two
+⚂  Three
+...
+⚅⚄  Eleven
+⚅⚅  Twelve
+⚅⚅⚀  Thirteen
+```
