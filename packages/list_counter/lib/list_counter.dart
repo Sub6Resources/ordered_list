@@ -343,90 +343,62 @@ class PredefinedCounterStyles {
   /// This class isn't meant to be instantiated.
   PredefinedCounterStyles._();
 
+  /// A map of the names of all predefined counter styles to their definition.
+  static final styleMap = {
+    'arabic-indic': arabicIndic,
+    'armenian': armenian,
+    'lower-armenian': lowerArmenian,
+    'upper-armenian': upperArmenian,
+    'bengali': bengali,
+    'cambodian': cambodian,
+    'khmer': khmer,
+    'circle': circle,
+    'cjk-decimal': cjkDecimal,
+    'cjk-earthly-branch': cjkEarthlyBranch,
+    'cjk-heavenly-stem': cjkHeavenlyStem,
+    'decimal': decimal,
+    'decimal-leading-zero': decimalLeadingZero,
+    'devanagari': devanagari,
+    'disc': disc,
+    'disclosure-closed': disclosureClosed,
+    'disclosure-open': disclosureOpen,
+    'georgian': georgian,
+    'gujarati': gujarati,
+    'gurmukhi': gurmukhi,
+    'hebrew': hebrew,
+    'hiragana': hiragana,
+    'hiragana-iroha': hiraganaIroha,
+    'japanese-formal': japaneseFormal,
+    'japanese-informal': japaneseInformal,
+    'kannada': kannada,
+    'katakana': katakana,
+    'katakana-iroha': katakanaIroha,
+    'korean-hangul-formal': koreanHangulFormal,
+    'korean-hanja-informal': koreanHanjaInformal,
+    'korean-hanja-formal': koreanHanjaFormal,
+    'lao': lao,
+    'lower-alpha': lowerAlpha,
+    'lower-greek': lowerGreek,
+    'lower-latin': lowerLatin,
+    'lower-roman': lowerRoman,
+    'malayalam': malayalam,
+    'mongolian': mongolian,
+    'myanmar': myanmar,
+    'oriya': oriya,
+    'persian': persian,
+    'square': square,
+    'tamil': tamil,
+    'telugu': telugu,
+    'thai': thai,
+    'tibetan': tibetan,
+    'upper-alpha': upperAlpha,
+    'upper-latin': upperLatin,
+    'upper-roman': upperRoman,
+  };
+
   /// Lookup a predefined CounterStyle by name (used to find a fallback style)
   static CounterStyle lookup(String name) {
-    switch (name) {
-      case 'arabic-indic':
-        return arabicIndic;
-      case 'bengali':
-        return bengali;
-      case 'cambodian':
-        return cambodian;
-      case 'khmer':
-        return khmer;
-      case 'circle':
-        return circle;
-      case 'cjk-decimal':
-        return cjkDecimal;
-      case 'cjk-earthly-branch':
-        return cjkEarthlyBranch;
-      case 'cjk-heavenly-stem':
-        return cjkHeavenlyStem;
-      case 'decimal':
-        return decimal;
-      case 'decimal-leading-zero':
-        return decimalLeadingZero;
-      case 'devanagari':
-        return devanagari;
-      case 'disc':
-        return disc;
-      case 'disclosure-closed':
-        return disclosureClosed;
-      case 'disclosure-open':
-        return disclosureOpen;
-      case 'gujarati':
-        return gujarati;
-      case 'gurmukhi':
-        return gurmukhi;
-      case 'hiragana':
-        return hiragana;
-      case 'hiragana-iroha':
-        return hiraganaIroha;
-      case 'kannada':
-        return kannada;
-      case 'katakana':
-        return katakana;
-      case 'katakana-iroha':
-        return katakanaIroha;
-      case 'lao':
-        return lao;
-      case 'lower-alpha':
-        return lowerAlpha;
-      case 'lower-greek':
-        return lowerGreek;
-      case 'lower-latin':
-        return lowerLatin;
-      case 'lower-roman':
-        return lowerRoman;
-      case 'malayalam':
-        return malayalam;
-      case 'mongolian':
-        return mongolian;
-      case 'myanmar':
-        return myanmar;
-      case 'oriya':
-        return oriya;
-      case 'persian':
-        return persian;
-      case 'square':
-        return square;
-      case 'tamil':
-        return tamil;
-      case 'telugu':
-        return telugu;
-      case 'thai':
-        return thai;
-      case 'tibetan':
-        return tibetan;
-      case 'upper-alpha':
-        return upperAlpha;
-      case 'upper-latin':
-        return upperLatin;
-      case 'upper-roman':
-        return upperRoman;
-      default:
-        return decimal;
-    }
+    return styleMap[name] ?? styleMap['decimal']!;
   }
 
   /// Arabic-indic numbering (e.g., ١‎, ٢‎, ٣‎, ٤‎, ..., ٩٨‎, ٩٩‎, ١٠٠‎).
@@ -446,7 +418,144 @@ class PredefinedCounterStyles {
       '\u0669'
     ],
   );
-  //TODO armenian, upper-armenian, and lower-armenian
+
+  /// Traditional uppercase Armenian numbering (e.g., Ա, Բ, Գ, ..., ՂԸ, ՂԹ, Ճ).
+  static final armenian = CounterStyle.define(
+    name: 'armenian',
+    system: System.additive,
+    range: IntRange(min: 1, max: 9999),
+    additiveSymbols: {
+      9000: '\u0554',
+      8000: '\u0553',
+      7000: '\u0552',
+      6000: '\u0551',
+      5000: '\u0550',
+      4000: '\u054F',
+      3000: '\u054E',
+      2000: '\u054D',
+      1000: '\u054C',
+      900: '\u054B',
+      800: '\u054A',
+      700: '\u0549',
+      600: '\u0548',
+      500: '\u0547',
+      400: '\u0546',
+      300: '\u0545',
+      200: '\u0544',
+      100: '\u0543',
+      90: '\u0542',
+      80: '\u0541',
+      70: '\u0540',
+      60: '\u053F',
+      50: '\u053E',
+      40: '\u053D',
+      30: '\u053C',
+      20: '\u053B',
+      10: '\u053A',
+      9: '\u0539',
+      8: '\u0538',
+      7: '\u0537',
+      6: '\u0536',
+      5: '\u0535',
+      4: '\u0534',
+      3: '\u0533',
+      2: '\u0532',
+      1: '\u0531',
+    },
+    /* 9000 Ք, 8000 Փ, 7000 Ւ, 6000 Ց, 5000 Ր, 4000 Տ, 3000 Վ, 2000 Ս, 1000 Ռ, 900 Ջ, 800 Պ, 700 Չ, 600 Ո, 500 Շ, 400 Ն, 300 Յ, 200 Մ, 100 Ճ, 90 Ղ, 80 Ձ, 70 Հ, 60 Կ, 50 Ծ, 40 Խ, 30 Լ, 20 Ի, 10 Ժ, 9 Թ, 8 Ը, 7 Է, 6 Զ, 5 Ե, 4 Դ, 3 Գ, 2 Բ, 1 Ա */
+  );
+
+  /// Lowercase Armenian numbering (e.g., ա, բ, գ, ..., ղը, ղթ, ճ).
+  static final lowerArmenian = CounterStyle.define(
+    name: 'lower-armenian',
+    system: System.additive,
+    range: IntRange(min: 1, max: 9999),
+    additiveSymbols: {
+      9000: '\u0584',
+      8000: '\u0583',
+      7000: '\u0582',
+      6000: '\u0581',
+      5000: '\u0580',
+      4000: '\u057F',
+      3000: '\u057E',
+      2000: '\u057D',
+      1000: '\u057C',
+      900: '\u057B',
+      800: '\u057A',
+      700: '\u0579',
+      600: '\u0578',
+      500: '\u0577',
+      400: '\u0576',
+      300: '\u0575',
+      200: '\u0574',
+      100: '\u0573',
+      90: '\u0572',
+      80: '\u0571',
+      70: '\u0570',
+      60: '\u056F',
+      50: '\u056E',
+      40: '\u056D',
+      30: '\u056C',
+      20: '\u056B',
+      10: '\u056A',
+      9: '\u0569',
+      8: '\u0568',
+      7: '\u0567',
+      6: '\u0566',
+      5: '\u0565',
+      4: '\u0564',
+      3: '\u0563',
+      2: '\u0562',
+      1: '\u0561',
+    },
+    /* 9000 ք, 8000 փ, 7000 ւ, 6000 ց, 5000 ր, 4000 տ, 3000 վ, 2000 ս, 1000 ռ, 900 ջ, 800 պ, 700 չ, 600 ո, 500 շ, 400 ն, 300 յ, 200 մ, 100 ճ, 90 ղ, 80 ձ, 70 հ, 60 կ, 50 ծ, 40 խ, 30 լ, 20 ի, 10 ժ, 9 թ, 8 ը, 7 է, 6 զ, 5 ե, 4 դ, 3 գ, 2 բ, 1 ա */
+  );
+
+  /// Traditional uppercase Armenian numbering (e.g., Ա, Բ, Գ, ..., ՂԸ, ՂԹ, Ճ).
+  static final upperArmenian = CounterStyle.define(
+    name: 'upper-armenian',
+    system: System.additive,
+    range: IntRange(min: 1, max: 9999),
+    additiveSymbols: {
+      9000: '\u0554',
+      8000: '\u0553',
+      7000: '\u0552',
+      6000: '\u0551',
+      5000: '\u0550',
+      4000: '\u054F',
+      3000: '\u054E',
+      2000: '\u054D',
+      1000: '\u054C',
+      900: '\u054B',
+      800: '\u054A',
+      700: '\u0549',
+      600: '\u0548',
+      500: '\u0547',
+      400: '\u0546',
+      300: '\u0545',
+      200: '\u0544',
+      100: '\u0543',
+      90: '\u0542',
+      80: '\u0541',
+      70: '\u0540',
+      60: '\u053F',
+      50: '\u053E',
+      40: '\u053D',
+      30: '\u053C',
+      20: '\u053B',
+      10: '\u053A',
+      9: '\u0539',
+      8: '\u0538',
+      7: '\u0537',
+      6: '\u0536',
+      5: '\u0535',
+      4: '\u0534',
+      3: '\u0533',
+      2: '\u0532',
+      1: '\u0531',
+    },
+    /* 9000 Ք, 8000 Փ, 7000 Ւ, 6000 Ց, 5000 Ր, 4000 Տ, 3000 Վ, 2000 Ս, 1000 Ռ, 900 Ջ, 800 Պ, 700 Չ, 600 Ո, 500 Շ, 400 Ն, 300 Յ, 200 Մ, 100 Ճ, 90 Ղ, 80 Ձ, 70 Հ, 60 Կ, 50 Ծ, 40 Խ, 30 Լ, 20 Ի, 10 Ժ, 9 Թ, 8 Ը, 7 Է, 6 Զ, 5 Ե, 4 Դ, 3 Գ, 2 Բ, 1 Ա */
+  );
 
   /// Bengali numbering (e.g., ১, ২, ৩, ..., ৯৮, ৯৯, ১০০).
   static final bengali = CounterStyle.define(
@@ -576,6 +685,7 @@ class PredefinedCounterStyles {
     /* 甲 乙 丙 丁 戊 己 庚 辛 壬 癸 */
     suffix: '、',
   );
+
   //TODO cjk-ideographic
 
   /// Western decimal numbers (e.g., 1, 2, 3, ..., 98, 99, 100).
@@ -639,8 +749,55 @@ class PredefinedCounterStyles {
     /* ▾ */
     suffix: ' ',
   );
+
   //TODO ethiopic-numeric
-  //TODO georgian
+
+  /// Traditional Georgian numbering (e.g., ა, ბ, გ, ..., ჟჱ, ჟთ, რ).
+  static final georgian = CounterStyle.define(
+    name: 'georgian',
+    system: System.additive,
+    range: IntRange(min: 1, max: 19999),
+    additiveSymbols: {
+      10000: '\u10F5',
+      9000: '\u10F0',
+      8000: '\u10EF',
+      7000: '\u10F4',
+      6000: '\u10EE',
+      5000: '\u10ED',
+      4000: '\u10EC',
+      3000: '\u10EB',
+      2000: '\u10EA',
+      1000: '\u10E9',
+      900: '\u10E8',
+      800: '\u10E7',
+      700: '\u10E6',
+      600: '\u10E5',
+      500: '\u10E4',
+      400: '\u10F3',
+      300: '\u10E2',
+      200: '\u10E1',
+      100: '\u10E0',
+      90: '\u10DF',
+      80: '\u10DE',
+      70: '\u10DD',
+      60: '\u10F2',
+      50: '\u10DC',
+      40: '\u10DB',
+      30: '\u10DA',
+      20: '\u10D9',
+      10: '\u10D8',
+      9: '\u10D7',
+      8: '\u10F1',
+      7: '\u10D6',
+      6: '\u10D5',
+      5: '\u10D4',
+      4: '\u10D3',
+      3: '\u10D2',
+      2: '\u10D1',
+      1: '\u10D0',
+    },
+    /* 10000 ჵ, 9000 ჰ, 8000 ჯ, 7000 ჴ, 6000 ხ, 5000 ჭ, 4000 წ, 3000 ძ, 2000 ც, 1000 ჩ, 900 შ, 800 ყ, 700 ღ, 600 ქ, 500 ფ, 400 ჳ, 300 ტ, 200 ს, 100 რ, 90 ჟ, 80 პ, 70 ო, 60 ჲ, 50 ნ, 40 მ, 30 ლ, 20 კ, 10 ი, 9 თ, 8 ჱ, 7 ზ, 6 ვ, 5 ე, 4 დ, 3 გ, 2 ბ, 1 ა */
+  );
 
   /// Gujarati numbering (e.g., ૧, ૨, ૩, ..., ૯૮, ૯૯, ૧૦૦).
   static final gujarati = CounterStyle.define(
@@ -681,7 +838,52 @@ class PredefinedCounterStyles {
   );
 
   /// Traditional Hebrew numbering (e.g., א‎, ב‎, ג‎, ..., צח‎, צט‎, ק‎).
-  //TODO hebrew
+  static final hebrew = CounterStyle.define(
+    name: 'hebrew',
+    system: System.additive,
+    range: IntRange(min: 1, max: 10999),
+    additiveSymbols: {
+      10000: '\u05D9\u05F3',
+      9000: '\u05D8\u05F3',
+      8000: '\u05D7\u05F3',
+      7000: '\u05D6\u05F3',
+      6000: '\u05D5\u05F3',
+      5000: '\u05D4\u05F3',
+      4000: '\u05D3\u05F3',
+      3000: '\u05D2\u05F3',
+      2000: '\u05D1\u05F3',
+      1000: '\u05D0\u05F3',
+      400: '\u05EA',
+      300: '\u05E9',
+      200: '\u05E8',
+      100: '\u05E7',
+      90: '\u05E6',
+      80: '\u05E4',
+      70: '\u05E2',
+      60: '\u05E1',
+      50: '\u05E0',
+      40: '\u05DE',
+      30: '\u05DC',
+      20: '\u05DB',
+      19: '\u05D9\u05D8',
+      18: '\u05D9\u05D7',
+      17: '\u05D9\u05D6',
+      16: '\u05D8\u05D6',
+      15: '\u05D8\u05D5',
+      10: '\u05D9',
+      9: '\u05D8',
+      8: '\u05D7',
+      7: '\u05D6',
+      6: '\u05D5',
+      5: '\u05D4',
+      4: '\u05D3',
+      3: '\u05D2',
+      2: '\u05D1',
+      1: '\u05D0',
+    },
+    /* 10000 י׳, 9000 ט׳, 8000 ח׳, 7000 ז׳, 6000 ו׳, 5000 ה׳, 4000 ד׳, 3000 ג׳, 2000 ב׳, 1000 א׳, 400 ת, 300 ש, 200 ר, 100 ק, 90 צ, 80 פ, 70 ע, 60 ס, 50 נ, 40 מ, 30 ל, 20 כ, 19 יט, 18 יח, 17 יז, 16 טז, 15 טו, 10 י, 9 ט, 8 ח, 7 ז, 6 ו, 5 ה, 4 ד, 3 ג, 2 ב, 1 א */
+    /* This system manually specifies the values for 19-15 to force the correct display of 15 and 16, which are commonly rewritten to avoid a close resemblance to the Tetragrammaton. */
+  );
 
   /// Dictionary-order hiragana lettering (e.g., あ, い, う, ..., ん, ああ, あい).
   static final hiragana = CounterStyle.define(
@@ -797,8 +999,110 @@ class PredefinedCounterStyles {
     /* い ろ は に ほ へ と ち り ぬ る を わ か よ た れ そ つ ね な ら む う ゐ の お く や ま け ふ こ え て あ さ き ゆ め み し ゑ ひ も せ す */
     suffix: '、',
   );
-  //TODO japanese-informal
-  //TODO japanese-formal
+
+  /// Informal Japanese Kanji numbering (e.g., 千百十一)
+  static final japaneseInformal = CounterStyle.define(
+    name: 'japanese-informal',
+    system: System.additive,
+    range: IntRange(min: -9999, max: 9999),
+    additiveSymbols: {
+      9000: '\u4E5D\u5343',
+      8000: '\u516B\u5343',
+      7000: '\u4E03\u5343',
+      6000: '\u516D\u5343',
+      5000: '\u4E94\u5343',
+      4000: '\u56DB\u5343',
+      3000: '\u4E09\u5343',
+      2000: '\u4E8C\u5343',
+      1000: '\u5343',
+      900: '\u4E5D\u767E',
+      800: '\u516B\u767E',
+      700: '\u4E03\u767E',
+      600: '\u516D\u767E',
+      500: '\u4E94\u767E',
+      400: '\u56DB\u767E',
+      300: '\u4E09\u767E',
+      200: '\u4E8C\u767E',
+      100: '\u767E',
+      90: '\u4E5D\u5341',
+      80: '\u516B\u5341',
+      70: '\u4E03\u5341',
+      60: '\u516D\u5341',
+      50: '\u4E94\u5341',
+      40: '\u56DB\u5341',
+      30: '\u4E09\u5341',
+      20: '\u4E8C\u5341',
+      10: '\u5341',
+      9: '\u4E5D',
+      8: '\u516B',
+      7: '\u4E03',
+      6: '\u516D',
+      5: '\u4E94',
+      4: '\u56DB',
+      3: '\u4E09',
+      2: '\u4E8C',
+      1: '\u4E00',
+      0: '\u3007',
+    },
+    /* 9000 九千, 8000 八千, 7000 七千, 6000 六千, 5000 五千, 4000 四千, 3000 三千, 2000 二千, 1000 千, 900 九百, 800 八百, 700 七百, 600 六百, 500 五百, 400 四百, 300 三百, 200 二百, 100 百, 90 九十, 80 八十, 70 七十, 60 六十, 50 五十, 40 四十, 30 三十, 20 二十, 10 十, 9 九, 8 八, 7 七, 6 六, 5 五, 4 四, 3 三, 2 二, 1 一, 0 〇 */
+    suffix: '\u3001',
+    /* 、 */
+    negative: '\u30DE\u30A4\u30CA\u30B9',
+    /* マイナス */
+    fallback: 'cjk-decimal',
+  );
+
+  /// Formal Japanese Kanji numbering (e.g. 壱阡壱百壱拾壱)
+  static final japaneseFormal = CounterStyle.define(
+    name: 'japanese-formal',
+    system: System.additive,
+    range: IntRange(min: -9999, max: 9999),
+    additiveSymbols: {
+      9000: '\u4E5D\u9621',
+      8000: '\u516B\u9621',
+      7000: '\u4E03\u9621',
+      6000: '\u516D\u9621',
+      5000: '\u4F0D\u9621',
+      4000: '\u56DB\u9621',
+      3000: '\u53C2\u9621',
+      2000: '\u5F10\u9621',
+      1000: '\u58F1\u9621',
+      900: '\u4E5D\u767E',
+      800: '\u516B\u767E',
+      700: '\u4E03\u767E',
+      600: '\u516D\u767E',
+      500: '\u4F0D\u767E',
+      400: '\u56DB\u767E',
+      300: '\u53C2\u767E',
+      200: '\u5F10\u767E',
+      100: '\u58F1\u767E',
+      90: '\u4E5D\u62FE',
+      80: '\u516B\u62FE',
+      70: '\u4E03\u62FE',
+      60: '\u516D\u62FE',
+      50: '\u4F0D\u62FE',
+      40: '\u56DB\u62FE',
+      30: '\u53C2\u62FE',
+      20: '\u5F10\u62FE',
+      10: '\u58F1\u62FE',
+      9: '\u4E5D',
+      8: '\u516B',
+      7: '\u4E03',
+      6: '\u516D',
+      5: '\u4F0D',
+      4: '\u56DB',
+      3: '\u53C2',
+      2: '\u5F10',
+      1: '\u58F1',
+      0: '\u96F6',
+    },
+    /* 9000 九阡, 8000 八阡, 7000 七阡, 6000 六阡, 5000 伍阡, 4000 四阡, 3000 参阡, 2000 弐阡, 1000 壱阡, 900 九百, 800 八百, 700 七百, 600 六百, 500 伍百, 400 四百, 300 参百, 200 弐百, 100 壱百, 90 九拾, 80 八拾, 70 七拾, 60 六拾, 50 伍拾, 40 四拾, 30 参拾, 20 弐拾, 10 壱拾, 9 九, 8 八, 7 七, 6 六, 5 伍, 4 四, 3 参, 2 弐, 1 壱, 0 零 */
+    suffix: '\u3001',
+    /* 、 */
+    negative: '\u30DE\u30A4\u30CA\u30B9',
+    /* マイナス */
+    fallback: 'cjk-decimal',
+  );
 
   /// Kannada numbering (e.g., ೧, ೨, ೩, ..., ೯೮, ೯೯, ೧೦೦).
   static final kannada = CounterStyle.define(
@@ -933,9 +1237,156 @@ class PredefinedCounterStyles {
     /* イ ロ ハ ニ ホ ヘ ト チ リ ヌ ル ヲ ワ カ ヨ タ レ ソ ツ ネ ナ ラ ム ウ ヰ ノ オ ク ヤ マ ケ フ コ エ テ ア サ キ ユ メ ミ シ ヱ ヒ モ セ ス */
     suffix: '、',
   );
-  //TODO korean-hangul-formal
-  //TODO korean-hanja-formal
-  //TODO korean-hanja-informal
+
+  /// Korean Hangul numbering (e.g., 일천일백일십일)
+  static final koreanHangulFormal = CounterStyle.define(
+    name: 'korean-hangul-formal',
+    system: System.additive,
+    range: IntRange(min: -9999, max: 9999),
+    additiveSymbols: {
+      9000: '\uAD6C\uCC9C',
+      8000: '\uD314\uCC9C',
+      7000: '\uCE60\uCC9C',
+      6000: '\uC721\uCC9C',
+      5000: '\uC624\uCC9C',
+      4000: '\uC0AC\uCC9C',
+      3000: '\uC0BC\uCC9C',
+      2000: '\uC774\uCC9C',
+      1000: '\uC77C\uCC9C',
+      900: '\uAD6C\uBC31',
+      800: '\uD314\uBC31',
+      700: '\uCE60\uBC31',
+      600: '\uC721\uBC31',
+      500: '\uC624\uBC31',
+      400: '\uC0AC\uBC31',
+      300: '\uC0BC\uBC31',
+      200: '\uC774\uBC31',
+      100: '\uC77C\uBC31',
+      90: '\uAD6C\uC2ED',
+      80: '\uD314\uC2ED',
+      70: '\uCE60\uC2ED',
+      60: '\uC721\uC2ED',
+      50: '\uC624\uC2ED',
+      40: '\uC0AC\uC2ED',
+      30: '\uC0BC\uC2ED',
+      20: '\uC774\uC2ED',
+      10: '\uC77C\uC2ED',
+      9: '\uAD6C',
+      8: '\uD314',
+      7: '\uCE60',
+      6: '\uC721',
+      5: '\uC624',
+      4: '\uC0AC',
+      3: '\uC0BC',
+      2: '\uC774',
+      1: '\uC77C',
+      0: '\uC601',
+    },
+    /* 9000 구천, 8000 팔천, 7000 칠천, 6000 육천, 5000 오천, 4000 사천, 3000 삼천, 2000 이천, 1000 일천, 900 구백, 800 팔백, 700 칠백, 600 육백, 500 오백, 400 사백, 300 삼백, 200 이백, 100 일백, 90 구십, 80 팔십, 70 칠십, 60 육십, 50 오십, 40 사십, 30 삼십, 20 이십, 10 일십, 9 구, 8 팔, 7 칠, 6 육, 5 오, 4 사, 3 삼, 2 이, 1 일, 0 영 */
+    suffix: ', ',
+    negative: '\uB9C8\uC774\uB108\uC2A4 ',
+    /* 마이너스 (followed by a space) */
+  );
+
+  /// Formal Korean Han (Hanja) numbering (e.g., 壹仟壹百壹拾壹)
+  static final koreanHanjaFormal = CounterStyle.define(
+    name: 'korean-hanja-formal',
+    system: System.additive,
+    range: IntRange(min: -9999, max: 9999),
+    additiveSymbols: {
+      9000: '\u4E5D\u4EDF',
+      8000: '\u516B\u4EDF',
+      7000: '\u4E03\u4EDF',
+      6000: '\u516D\u4EDF',
+      5000: '\u4E94\u4EDF',
+      4000: '\u56DB\u4EDF',
+      3000: '\u53C3\u4EDF',
+      2000: '\u8CB3\u4EDF',
+      1000: '\u58F9\u4EDF',
+      900: '\u4E5D\u767E',
+      800: '\u516B\u767E',
+      700: '\u4E03\u767E',
+      600: '\u516D\u767E',
+      500: '\u4E94\u767E',
+      400: '\u56DB\u767E',
+      300: '\u53C3\u767E',
+      200: '\u8CB3\u767E',
+      100: '\u58F9\u767E',
+      90: '\u4E5D\u62FE',
+      80: '\u516B\u62FE',
+      70: '\u4E03\u62FE',
+      60: '\u516D\u62FE',
+      50: '\u4E94\u62FE',
+      40: '\u56DB\u62FE',
+      30: '\u53C3\u62FE',
+      20: '\u8CB3\u62FE',
+      10: '\u58F9\u62FE',
+      9: '\u4E5D',
+      8: '\u516B',
+      7: '\u4E03',
+      6: '\u516D',
+      5: '\u4E94',
+      4: '\u56DB',
+      3: '\u53C3',
+      2: '\u8CB3',
+      1: '\u58F9',
+      0: '\u96F6',
+    },
+    /* 9000 九仟, 8000 八仟, 7000 七仟, 6000 六仟, 5000 五仟, 4000 四仟, 3000 參仟, 2000 貳仟, 1000 壹仟, 900 九百, 800 八百, 700 七百, 600 六百, 500 五百, 400 四百, 300 參百, 200 貳百, 100 壹百, 90 九拾, 80 八拾, 70 七拾, 60 六拾, 50 五拾, 40 四拾, 30 參拾, 20 貳拾, 10 壹拾, 9 九, 8 八, 7 七, 6 六, 5 五, 4 四, 3 參, 2 貳, 1 壹, 0 零 */
+    suffix: ', ',
+    negative: '\uB9C8\uC774\uB108\uC2A4 ',
+    /* 마이너스 (followed by a space) */
+  );
+
+  /// Informal Korean Hanja numbering (e.g., 千百十一)
+  static final koreanHanjaInformal = CounterStyle.define(
+    name: 'korean-hanja-informal',
+    system: System.additive,
+    range: IntRange(min: -9999, max: 9999),
+    additiveSymbols: {
+      9000: '\u4E5D\u5343',
+      8000: '\u516B\u5343',
+      7000: '\u4E03\u5343',
+      6000: '\u516D\u5343',
+      5000: '\u4E94\u5343',
+      4000: '\u56DB\u5343',
+      3000: '\u4E09\u5343',
+      2000: '\u4E8C\u5343',
+      1000: '\u5343',
+      900: '\u4E5D\u767E',
+      800: '\u516B\u767E',
+      700: '\u4E03\u767E',
+      600: '\u516D\u767E',
+      500: '\u4E94\u767E',
+      400: '\u56DB\u767E',
+      300: '\u4E09\u767E',
+      200: '\u4E8C\u767E',
+      100: '\u767E',
+      90: '\u4E5D\u5341',
+      80: '\u516B\u5341',
+      70: '\u4E03\u5341',
+      60: '\u516D\u5341',
+      50: '\u4E94\u5341',
+      40: '\u56DB\u5341',
+      30: '\u4E09\u5341',
+      20: '\u4E8C\u5341',
+      10: '\u5341',
+      9: '\u4E5D',
+      8: '\u516B',
+      7: '\u4E03',
+      6: '\u516D',
+      5: '\u4E94',
+      4: '\u56DB',
+      3: '\u4E09',
+      2: '\u4E8C',
+      1: '\u4E00',
+      0: '\u96F6',
+    },
+    /* 9000 九千, 8000 八千, 7000 七千, 6000 六千, 5000 五千, 4000 四千, 3000 三千, 2000 二千, 1000 千, 900 九百, 800 八百, 700 七百, 600 六百, 500 五百, 400 四百, 300 三百, 200 二百, 100 百, 90 九十, 80 八十, 70 七十, 60 六十, 50 五十, 40 四十, 30 三十, 20 二十, 10 十, 9 九, 8 八, 7 七, 6 六, 5 五, 4 四, 3 三, 2 二, 1 一, 0 零 */
+    suffix: ', ',
+    negative: '\uB9C8\uC774\uB108\uC2A4 ',
+    /* 마이너스 (followed by a space) */
+  );
 
   /// Laotian numbering (e.g., ໑, ໒, ໓, ..., ໙໘, ໙໙, ໑໐໐).
   static final lao = CounterStyle.define(
@@ -1173,6 +1624,7 @@ class PredefinedCounterStyles {
     ],
     /* ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ */
   );
+
   //TODO simp-chinese-formal
   //TODO simp-chinese-informal
 
@@ -1260,6 +1712,7 @@ class PredefinedCounterStyles {
     ],
     /* ༠ ༡ ༢ ༣ ༤ ༥ ༦ ༧ ༨ ༩ */
   );
+
   //TODO trad-chinese-formal
   //TODO trad-chinese-informal
 

@@ -16,7 +16,7 @@ Getting started is simple:
 
 ```yaml
 dependencies:
-  ordered_list: ^0.0.1
+  ordered_list: ^0.5.0
 ```
 
 ## Usage
@@ -40,7 +40,7 @@ void main() {
 }
 ```
 
-## Predefined List Styles
+## Predefined Counter Styles
 
 A lengthy list of predefined counter styles is included!
 
@@ -59,6 +59,8 @@ As well as dozens of language-specific number systems, such as:
  - `PredefinedCounterStyles.katakana` (i.e. ア イ ウ エ オ カ キ ク ...)
 
 See https://www.w3.org/TR/css-counter-styles-3/#predefined-counters for the full list.
+
+## Custom Counter Styles
 
 Or, you can define your own style:
 
