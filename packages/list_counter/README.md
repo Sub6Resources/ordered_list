@@ -45,16 +45,18 @@ void main() {
 A lengthy list of predefined counter styles is included!
 
 Some of the most basic include:
-`PredefinedCounterStyles.decimal` (A simple ordered list)
-`PredefinedCounterStyles.disc` (A simple bulleted/unordered list)
-`PredefinedCounterStyles.circle` (A bulleted list with open circles)
-`PredefinedCounterStyles.square` (A bulleted list with square bullets)
-`PredefinedCounterStyles.lowerAlpha` (e.g., a, b, c, ..., z, aa, ab)
+
+ - `PredefinedCounterStyles.decimal` (A simple ordered list)
+ - `PredefinedCounterStyles.disc` (A simple bulleted/unordered list)
+ - `PredefinedCounterStyles.circle` (A bulleted list with open circles)
+ - `PredefinedCounterStyles.square` (A bulleted list with square bullets)
+ - `PredefinedCounterStyles.lowerAlpha` (e.g., a, b, c, ..., z, aa, ab)
 
 As well as dozens of language-specific number systems, such as:
-`PredefinedCounterStyles.cjkDecimal` (i.e. 〇 一 二 三 四 五 六 七 八 九 ...)
-`PredefinedCounterStyles.cambodian` (i.e. ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ...)
-`PredefinedCounterStyles.katakana` (i.e. ア イ ウ エ オ カ キ ク ...)
+
+ - `PredefinedCounterStyles.cjkDecimal` (i.e. 〇 一 二 三 四 五 六 七 八 九 ...)
+ - `PredefinedCounterStyles.cambodian` (i.e. ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ...)
+ - `PredefinedCounterStyles.katakana` (i.e. ア イ ウ エ オ カ キ ク ...)
 
 See https://www.w3.org/TR/css-counter-styles-3/#predefined-counters for the full list.
 
@@ -64,7 +66,7 @@ Or, you can define your own style:
 // Sample additive style taken from https://www.w3.org/TR/css-counter-styles-3/#additive-system
 final diceStyle = CounterStyle.define(
   name: 'dice-style',
-  system: system.additive,
+  system: System.additive,
   additiveSymbols: {6: '⚅', 5: '⚄', 4: '⚃', 3: '⚂', 2: '⚁', 1: '⚀'},
   suffix: " ",
 );

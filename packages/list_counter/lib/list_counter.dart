@@ -9,10 +9,17 @@ class Counter {
   final String name;
   int value;
 
+  /// Initialize a new counter with a given name and value (default 0)
   Counter(this.name, [this.value = 0]);
 
+  /// Increment the counter by a given value (default is 1)
   void increment([int byValue = 1]) {
     value += byValue;
+  }
+
+  /// Reset the counter to 0.
+  void reset() {
+    value = 0;
   }
 }
 
@@ -41,6 +48,7 @@ class CounterStyle {
   /// A range, which limits the values that a counter style handles
   final IntRange _range;
 
+  /// Keeps track of pad characters and length for this CounterStyle.
   final int _padLength;
   final String _padCharacter;
 
@@ -68,20 +76,54 @@ class CounterStyle {
         _padCharacter = padCharacter,
         _fallbackStyle = fallbackStyle;
 
+  /// A simple way to define CounterStyle. Based off of systems defined at
+  /// https://www.w3.org/TR/css-counter-styles-3/#counter-style-system
   factory CounterStyle.define({
+    /// The name of the system. Not used internally, but could be used in a
+    /// list of CounterStyle's to lookup a given style.
     required String name,
+
+    /// The system type. See [System] for more details.
     System system = System.symbolic,
+
+    /// The character to prepend to negative values.
     String negative = '-',
+    // TODO add negativeSuffix
+
+    /// A prefix to add when generating marker content
     String prefix = '',
+
+    /// A suffix to add when generating marker content (Defaults to
+    /// a full stop followed by a space: ". ").
     String suffix = '\u002E\u0020',
+
+    /// The range of values this CounterStyle can accept. If a counter value is
+    /// given outside of this range, then the CounterStyle will fall back on
+    /// the CounterStyle defined by [fallback].
+    ///
+    /// If null, defaults to the given [System]'s range
     IntRange? range,
 
-    /// Must be greater than or equal to 0.
+    /// The length each output must have at minimum, including negative symbols, but not
+    /// including any suffix or prefix symbols.
+    /// padLength must be greater than or equal to 0.
     int padLength = 0,
+
+    /// The character with which to pad the output to reach the given padLength.
+    /// If more than one character is given in [padCharacter], then the output
+    /// will be longer than [padLength] (but never shorter).
     String padCharacter = '',
+
+    /// The CounterStyle to fall back on if the given algorithm can't compute
+    /// an output or is given out-of-range input.
     String fallback = 'decimal',
+
+    /// The list of symbols used by this algorithm
     List<String> symbols = const [],
+
+    /// A map of weights to symbols used by the additive algorithm
     Map<int, String> additiveSymbols = const {},
+
     //TODO speak-as descriptor (https://www.w3.org/TR/css-counter-styles-3/#counter-style-speak-as)
   }) {
     assert(padLength >= 0);
@@ -222,12 +264,19 @@ class IntRange {
   final int? min;
   final int? max;
 
+  /// Defines a range of integers. Min and max are inclusive, and default to
+  /// negative and positive infinity (subject to integer size limitations),
+  /// respectively, if not declared.
   const IntRange({this.min, this.max});
 
+  /// Helper method to declare an infinite range of integers.
+  /// This is equivalent to IntRange() with no arguments, but is included
+  /// for clarity.
   const IntRange.infinite()
       : min = null,
         max = null;
 
+  /// Tests whether the given value is within this range.
   bool withinRange(int value) {
     if (min != null && min! > value) {
       return false;
@@ -240,28 +289,61 @@ class IntRange {
   }
 }
 
+/// Declares the predefined CounterStyle systems.
 enum System {
+  /// Cycles repeatedly through its provided symbols, looping back to the beginning
+  /// when it reaches the end of the list.
+  ///
+  /// See https://www.w3.org/TR/css-counter-styles-3/#cyclic-system
   cyclic(IntRange.infinite()),
+
+  /// Interprets the list of symbols as digits to a "place-value" numbering
+  /// system (i.e. first symbol represents 0, second represents 1, and so on).
+  ///
+  /// See https://www.w3.org/TR/css-counter-styles-3/#numeric-system
   numeric(IntRange.infinite()),
+
+  /// Runs through its list of provided symbols once, then falls back on
+  /// the fallback counter style's algorithm.
+  ///
+  /// See https://www.w3.org/TR/css-counter-styles-3/#fixed-system
   fixed(IntRange.infinite()),
+
+  /// Interprets the the list of counter symbols as digits to an alphabetic
+  /// numbering system. (e.g. a, b, c, ... z, aa, ab, ac, etc.)
+  ///
+  /// See https://www.w3.org/TR/css-counter-styles-3/#alphabetic-system
   alphabetic(IntRange(min: 1)),
+
+  /// Cycles repeatedly through its provided symbols, doubling, tripling, etc.
+  /// the symbols on each successive pass through the list.
+  ///
+  /// See https://www.w3.org/TR/css-counter-styles-3/#symbolic-system
   symbolic(IntRange(min: 1)),
+
+  /// Used to represent "sign-value" numbering systems, where the value of a
+  /// number is obtained by adding the digits together. (e.g. Roman numerals)
+  ///
+  /// See https://www.w3.org/TR/css-counter-styles-3/#additive-system
   additive(IntRange(min: 0));
 
+  /// The default range of the given [System].
   final IntRange range;
 
+  /// Constructs a System with the given range.
   const System(this.range);
 }
 
-/// Defines default counter-styles
+/// Defines a list of predefined counter-styles
 /// (ref: https://www.w3.org/TR/css-counter-styles-3/#predefined-counters)
 ///
-/// For more beyond what are defined here,
+/// For examples of more common systems beyond what are defined here,
 /// see https://www.w3.org/TR/predefined-counter-styles/
 class PredefinedCounterStyles {
-  // This class isn't meant to be instantiated.
+  /// This class isn't meant to be instantiated.
   PredefinedCounterStyles._();
 
+  /// Lookup a predefined CounterStyle by name (used to find a fallback style)
   static CounterStyle lookup(String name) {
     switch (name) {
       case 'arabic-indic':
@@ -347,6 +429,7 @@ class PredefinedCounterStyles {
     }
   }
 
+  /// Arabic-indic numbering (e.g., ١‎, ٢‎, ٣‎, ٤‎, ..., ٩٨‎, ٩٩‎, ١٠٠‎).
   static final arabicIndic = CounterStyle.define(
     name: 'arabic-indic',
     system: System.numeric,
@@ -364,6 +447,8 @@ class PredefinedCounterStyles {
     ],
   );
   //TODO armenian, upper-armenian, and lower-armenian
+
+  /// Bengali numbering (e.g., ১, ২, ৩, ..., ৯৮, ৯৯, ১০০).
   static final bengali = CounterStyle.define(
     name: 'bengali',
     system: System.numeric,
@@ -381,6 +466,8 @@ class PredefinedCounterStyles {
     ],
     /* ০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯ */
   );
+
+  /// Cambodian/Khmer numbering (e.g., ១, ២, ៣, ..., ៩៨, ៩៩, ១០០).
   static final cambodian = CounterStyle.define(
     name: 'cambodian',
     system: System.numeric,
@@ -398,6 +485,8 @@ class PredefinedCounterStyles {
     ],
     /* ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ */
   );
+
+  /// Cambodian/Khmer numbering (e.g., ១, ២, ៣, ..., ៩៨, ៩៩, ១០០).
   static final khmer = CounterStyle.define(
     name: 'khmer', //Extends 'cambodian'
     system: System.numeric,
@@ -415,6 +504,8 @@ class PredefinedCounterStyles {
     ],
     /* ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ */
   );
+
+  /// A hollow circle, similar to ◦ U+25E6 WHITE BULLET.
   static final circle = CounterStyle.define(
     name: 'circle',
     system: System.cyclic,
@@ -422,6 +513,8 @@ class PredefinedCounterStyles {
     /* ◦ */
     suffix: ' ',
   );
+
+  /// Han decimal numbers (e.g., 一, 二, 三, ..., 九八, 九九, 一〇〇).
   static final cjkDecimal = CounterStyle.define(
     name: 'cjk-decimal',
     system: System.numeric,
@@ -441,6 +534,8 @@ class PredefinedCounterStyles {
     suffix: '\u3001',
     /* "、" */
   );
+
+  /// Han "Earthly Branch" ordinals (e.g., 子, 丑, 寅, ..., 亥).
   static final cjkEarthlyBranch = CounterStyle.define(
     name: 'cjk-earthly-branch',
     system: System.fixed,
@@ -461,6 +556,8 @@ class PredefinedCounterStyles {
     /* 子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥 */
     suffix: '、',
   );
+
+  /// Han "Heavenly Stem" ordinals (e.g., 甲, 乙, 丙, ..., 癸).
   static final cjkHeavenlyStem = CounterStyle.define(
     name: 'cjk-heavenly-stem',
     system: System.fixed,
@@ -480,11 +577,15 @@ class PredefinedCounterStyles {
     suffix: '、',
   );
   //TODO cjk-ideographic
+
+  /// Western decimal numbers (e.g., 1, 2, 3, ..., 98, 99, 100).
   static final decimal = CounterStyle.define(
     name: 'decimal',
     system: System.numeric,
     symbols: const ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
   );
+
+  /// Decimal numbers padded by initial zeros (e.g., 01, 02, 03, ..., 98, 99, 100).
   static final decimalLeadingZero = CounterStyle.define(
     name: 'decimal-leading-zero',
     system: System.numeric,
@@ -492,6 +593,8 @@ class PredefinedCounterStyles {
     padCharacter: '0',
     padLength: 2,
   );
+
+  /// devanagari numbering (e.g., १, २, ३, ..., ९८, ९९, १००).
   static final devanagari = CounterStyle.define(
     name: 'devanagari',
     system: System.numeric,
@@ -509,6 +612,8 @@ class PredefinedCounterStyles {
     ],
     /* ० १ २ ३ ४ ५ ६ ७ ८ ९ */
   );
+
+  /// A filled circle, similar to • U+2022 BULLET.
   static final disc = CounterStyle.define(
     name: 'disc',
     system: System.cyclic,
@@ -516,6 +621,8 @@ class PredefinedCounterStyles {
     /* • */
     suffix: ' ',
   );
+
+  /// U+25B8 BLACK RIGHT-POINTING SMALL TRIANGLE (▸)
   static final disclosureClosed = CounterStyle.define(
     name: 'disclosure-closed',
     system: System.cyclic,
@@ -523,6 +630,8 @@ class PredefinedCounterStyles {
     /* ▸ */
     suffix: ' ',
   );
+
+  /// U+25BE BLACK DOWN-POINTING SMALL TRIANGLE (▾).
   static final disclosureOpen = CounterStyle.define(
     name: 'disclosure-open',
     system: System.cyclic,
@@ -532,6 +641,8 @@ class PredefinedCounterStyles {
   );
   //TODO ethiopic-numeric
   //TODO georgian
+
+  /// Gujarati numbering (e.g., ૧, ૨, ૩, ..., ૯૮, ૯૯, ૧૦૦).
   static final gujarati = CounterStyle.define(
     name: 'gujarati',
     system: System.numeric,
@@ -549,6 +660,8 @@ class PredefinedCounterStyles {
     ],
     /* ૦ ૧ ૨ ૩ ૪ ૫ ૬ ૭ ૮ ૯ */
   );
+
+  /// Gurmukhi numbering (e.g., ੧, ੨, ੩, ..., ੯੮, ੯੯, ੧੦੦).
   static final gurmukhi = CounterStyle.define(
     name: 'gurmukhi',
     system: System.numeric,
@@ -566,7 +679,11 @@ class PredefinedCounterStyles {
     ],
     /* ੦ ੧ ੨ ੩ ੪ ੫ ੬ ੭ ੮ ੯ */
   );
+
+  /// Traditional Hebrew numbering (e.g., א‎, ב‎, ג‎, ..., צח‎, צט‎, ק‎).
   //TODO hebrew
+
+  /// Dictionary-order hiragana lettering (e.g., あ, い, う, ..., ん, ああ, あい).
   static final hiragana = CounterStyle.define(
     name: 'hiragana',
     system: System.alphabetic,
@@ -623,6 +740,8 @@ class PredefinedCounterStyles {
     /* あ い う え お か き く け こ さ し す せ そ た ち つ て と な に ぬ ね の は ひ ふ へ ほ ま み む め も や ゆ よ ら り る れ ろ わ ゐ ゑ を ん */
     suffix: '、',
   );
+
+  /// Iroha-order hiragana lettering (e.g., い, ろ, は, ..., す, いい, いろ).
   static final hiraganaIroha = CounterStyle.define(
     name: 'hiragana-iroha',
     system: System.alphabetic,
@@ -680,6 +799,8 @@ class PredefinedCounterStyles {
   );
   //TODO japanese-informal
   //TODO japanese-formal
+
+  /// Kannada numbering (e.g., ೧, ೨, ೩, ..., ೯೮, ೯೯, ೧೦೦).
   static final kannada = CounterStyle.define(
     name: 'kannada',
     system: System.numeric,
@@ -697,6 +818,8 @@ class PredefinedCounterStyles {
     ],
     /* ೦ ೧ ೨ ೩ ೪ ೫ ೬ ೭ ೮ ೯ */
   );
+
+  /// Dictionary-order katakana lettering (e.g., ア, イ, ウ, ..., ン, アア, アイ).
   static final katakana = CounterStyle.define(
     name: 'katakana',
     system: System.alphabetic,
@@ -753,6 +876,8 @@ class PredefinedCounterStyles {
     /* ア イ ウ エ オ カ キ ク ケ コ サ シ ス セ ソ タ チ ツ テ ト ナ ニ ヌ ネ ノ ハ ヒ フ ヘ ホ マ ミ ム メ モ ヤ ユ ヨ ラ リ ル レ ロ ワ ヰ ヱ ヲ ン */
     suffix: '、',
   );
+
+  /// Iroha-order katakana lettering (e.g., イ, ロ, ハ, ..., ス, イイ, イロ)
   static final katakanaIroha = CounterStyle.define(
     name: 'katakana-iroha',
     system: System.alphabetic,
@@ -811,6 +936,8 @@ class PredefinedCounterStyles {
   //TODO korean-hangul-formal
   //TODO korean-hanja-formal
   //TODO korean-hanja-informal
+
+  /// Laotian numbering (e.g., ໑, ໒, ໓, ..., ໙໘, ໙໙, ໑໐໐).
   static final lao = CounterStyle.define(
     name: 'lao',
     system: System.numeric,
@@ -828,6 +955,8 @@ class PredefinedCounterStyles {
     ],
     /* ໐ ໑ ໒ ໓ ໔ ໕ ໖ ໗ ໘ ໙ */
   );
+
+  /// Lowercase ASCII letters (e.g., a, b, c, ..., z, aa, ab).
   static final lowerAlpha = CounterStyle.define(
     name: 'lower-alpha',
     system: System.alphabetic,
@@ -860,6 +989,8 @@ class PredefinedCounterStyles {
       'z'
     ],
   );
+
+  /// Lowercase classical Greek (e.g., α, β, γ, ..., ω, αα, αβ).
   static final lowerGreek = CounterStyle.define(
     name: 'lower-greek',
     system: System.alphabetic,
@@ -891,6 +1022,8 @@ class PredefinedCounterStyles {
     ],
     /* α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ τ υ φ χ ψ ω */
   );
+
+  /// Lowercase ASCII letters (e.g., a, b, c, ..., z, aa, ab).
   static final lowerLatin = CounterStyle.define(
     name: 'lower-latin',
     system: System.alphabetic,
@@ -923,6 +1056,8 @@ class PredefinedCounterStyles {
       'z'
     ],
   );
+
+  /// Lowercase ASCII Roman numerals (e.g., i, ii, iii, ..., xcviii, xcix, c).
   static final lowerRoman = CounterStyle.define(
     name: 'lower-roman',
     system: System.additive,
@@ -943,6 +1078,8 @@ class PredefinedCounterStyles {
       1: 'i'
     },
   );
+
+  /// Malayalam numbering (e.g., ൧, ൨, ൩, ..., ൯൮, ൯൯, ൧൦൦).
   static final malayalam = CounterStyle.define(
     name: 'malayalam',
     system: System.numeric,
@@ -960,6 +1097,8 @@ class PredefinedCounterStyles {
     ],
     /* ൦ ൧ ൨ ൩ ൪ ൫ ൬ ൭ ൮ ൯ */
   );
+
+  /// Mongolian numbering (e.g., ᠑, ᠒, ᠓, ..., ᠙᠘, ᠙᠙, ᠑᠐᠐).
   static final mongolian = CounterStyle.define(
     name: 'mongolian',
     system: System.numeric,
@@ -977,6 +1116,8 @@ class PredefinedCounterStyles {
     ],
     /* ᠐ ᠑ ᠒ ᠓ ᠔ ᠕ ᠖ ᠗ ᠘ ᠙ */
   );
+
+  /// Myanmar (Burmese) numbering (e.g., ၁, ၂, ၃, ..., ၉၈, ၉၉, ၁၀၀).
   static final myanmar = CounterStyle.define(
     name: 'myanmar',
     system: System.numeric,
@@ -994,6 +1135,8 @@ class PredefinedCounterStyles {
     ],
     /* ၀ ၁ ၂ ၃ ၄ ၅ ၆ ၇ ၈ ၉ */
   );
+
+  /// Oriya numbering (e.g., ୧, ୨, ୩, ..., ୯୮, ୯୯, ୧୦୦).
   static final oriya = CounterStyle.define(
     name: 'oriya',
     system: System.numeric,
@@ -1011,6 +1154,8 @@ class PredefinedCounterStyles {
     ],
     /* ୦ ୧ ୨ ୩ ୪ ୫ ୬ ୭ ୮ ୯ */
   );
+
+  /// Persian numbering (e.g., ۱, ۲, ۳, ۴, ..., ۹۸, ۹۹, ۱۰۰).
   static final persian = CounterStyle.define(
     name: 'persian',
     system: System.numeric,
@@ -1030,6 +1175,8 @@ class PredefinedCounterStyles {
   );
   //TODO simp-chinese-formal
   //TODO simp-chinese-informal
+
+  /// A filled square, similar to ▪ U+25AA BLACK SMALL SQUARE.
   static final square = CounterStyle.define(
     name: 'square',
     system: System.cyclic,
@@ -1037,6 +1184,8 @@ class PredefinedCounterStyles {
     /* ▪ */
     suffix: ' ',
   );
+
+  /// Tamil numbering (e.g., ௧, ௨, ௩, ..., ௯௮, ௯௯, ௧௦௦).
   static final tamil = CounterStyle.define(
     name: 'tamil',
     system: System.numeric,
@@ -1054,6 +1203,8 @@ class PredefinedCounterStyles {
     ],
     /* ௦ ௧ ௨ ௩ ௪ ௫ ௬ ௭ ௮ ௯ */
   );
+
+  /// Telugu numbering (e.g., ౧, ౨, ౩, ..., ౯౮, ౯౯, ౧౦౦).
   static final telugu = CounterStyle.define(
     name: 'telugu',
     system: System.numeric,
@@ -1071,6 +1222,8 @@ class PredefinedCounterStyles {
     ],
     /* ౦ ౧ ౨ ౩ ౪ ౫ ౬ ౭ ౮ ౯ */
   );
+
+  /// Thai (Siamese) numbering (e.g., ๑, ๒, ๓, ..., ๙๘, ๙๙, ๑๐๐).
   static final thai = CounterStyle.define(
     name: 'thai',
     system: System.numeric,
@@ -1088,6 +1241,8 @@ class PredefinedCounterStyles {
     ],
     /* ๐ ๑ ๒ ๓ ๔ ๕ ๖ ๗ ๘ ๙ */
   );
+
+  /// Tibetan numbering (e.g., ༡, ༢, ༣, ..., ༩༨, ༩༩, ༡༠༠).
   static final tibetan = CounterStyle.define(
     name: 'tibetan',
     system: System.numeric,
@@ -1107,6 +1262,8 @@ class PredefinedCounterStyles {
   );
   //TODO trad-chinese-formal
   //TODO trad-chinese-informal
+
+  /// Uppercase ASCII letters (e.g., A, B, C, ..., Z, AA, AB).
   static final upperAlpha = CounterStyle.define(
     name: 'upper-alpha',
     system: System.alphabetic,
@@ -1139,6 +1296,8 @@ class PredefinedCounterStyles {
       'Z'
     ],
   );
+
+  /// Uppercase ASCII letters (e.g., A, B, C, ..., Z, AA, AB).
   static final upperLatin = CounterStyle.define(
     name: 'upper-latin',
     system: System.alphabetic,
@@ -1171,6 +1330,8 @@ class PredefinedCounterStyles {
       'Z'
     ],
   );
+
+  /// Uppercase ASCII Roman numerals (e.g., I, II, III, ..., XCVIII, XCIX, C).
   static final upperRoman = CounterStyle.define(
     name: 'lower-roman',
     system: System.additive,

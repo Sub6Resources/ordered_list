@@ -1,6 +1,6 @@
 name: list_counter
 description: A utility for counting in a variety of languages and styles. Made for lists.
-version: 0.0.1
+version: 0.1.0
 homepage: https://github.com/Sub6Resources/ordered_list
 
 environment:
