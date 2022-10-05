@@ -235,10 +235,71 @@ class CounterStyle {
     );
   }
 
+  factory CounterStyle.defineCustomAlgorithm({
+    /// The name of the system. Not used internally, but could be used in a
+    /// list of CounterStyle's to lookup a given style.
+    required String name,
+
+    /// The character to prepend to negative values.
+    String negative = '-',
+    // TODO add negativeSuffix
+
+    /// A prefix to add when generating marker content
+    String prefix = '',
+
+    /// A suffix to add when generating marker content (Defaults to
+    /// a full stop followed by a space: ". ").
+    String suffix = '\u002E\u0020',
+
+    /// The custom algorithm to apply when generating marker or counter
+    /// content from this style.
+    required String Function(int) algorithm,
+
+    /// The range of values this CounterStyle can accept. If a counter value is
+    /// given outside of this range, then the CounterStyle will fall back on
+    /// the CounterStyle defined by [fallback].
+    required IntRange range,
+
+    /// The length each output must have at minimum, including negative symbols, but not
+    /// including any suffix or prefix symbols.
+    /// padLength must be greater than or equal to 0.
+    int padLength = 0,
+
+    /// The character with which to pad the output to reach the given padLength.
+    /// If more than one character is given in [padCharacter], then the output
+    /// will be longer than [padLength] (but never shorter).
+    String padCharacter = '',
+
+    /// The CounterStyle to fall back on if the given algorithm can't compute
+    /// an output or is given out-of-range input.
+    String fallback = 'decimal',
+
+    //TODO speak-as descriptor (https://www.w3.org/TR/css-counter-styles-3/#counter-style-speak-as)
+  }) {
+    assert(padLength >= 0);
+
+    return CounterStyle._(
+      name: name,
+      algorithm: algorithm,
+      negative: negative,
+      prefix: prefix,
+      suffix: suffix,
+      range: range,
+      padLength: padLength,
+      padCharacter: padCharacter,
+      fallbackStyle: fallback,
+    );
+  }
+
+  /// Generates a marker using the algorithm of this [CounterStyle], applying
+  /// padding and negative signs as necessary. Also applies the given
+  /// (or default) prefix and suffix.
   String generateMarkerContent(int count) {
     return '$_prefix${generateCounterContent(count)}$_suffix';
   }
 
+  /// Generates content using the algorithm of this [CounterStyle], applying
+  /// padding and negative signs as necessary. Does not apply prefix or suffix.
   String generateCounterContent(int count) {
     if (!_range.withinRange(count)) {
       return PredefinedCounterStyles.lookup(_fallbackStyle)._algorithm(count);
@@ -356,6 +417,7 @@ class PredefinedCounterStyles {
     'cjk-decimal': cjkDecimal,
     'cjk-earthly-branch': cjkEarthlyBranch,
     'cjk-heavenly-stem': cjkHeavenlyStem,
+    'cjk-ideographic': cjkIdeographic,
     'decimal': decimal,
     'decimal-leading-zero': decimalLeadingZero,
     'devanagari': devanagari,
@@ -386,11 +448,15 @@ class PredefinedCounterStyles {
     'myanmar': myanmar,
     'oriya': oriya,
     'persian': persian,
+    'simp-chinese-formal': simpChineseFormal,
+    'simp-chinese-informal': simpChineseInformal,
     'square': square,
     'tamil': tamil,
     'telugu': telugu,
     'thai': thai,
     'tibetan': tibetan,
+    'trad-chinese-formal': tradChineseFormal,
+    'trad-chinese-informal': tradChineseInformal,
     'upper-alpha': upperAlpha,
     'upper-latin': upperLatin,
     'upper-roman': upperRoman,
@@ -686,7 +752,15 @@ class PredefinedCounterStyles {
     suffix: '、',
   );
 
-  //TODO cjk-ideographic
+  /// This counter style is identical to trad-chinese-informal. (It exists for legacy reasons.)
+  static final cjkIdeographic = CounterStyle.defineCustomAlgorithm(
+      name: 'cjk-ideographic',
+      algorithm: (count) => _chineseAlgorithm(count, 'trad-chinese-informal'),
+      range: IntRange(min: -9999, max: 9999),
+      suffix: '、',
+      fallback: 'cjk-decimal',
+      negative: '\u8ca0' // 負
+  );
 
   /// Western decimal numbers (e.g., 1, 2, 3, ..., 98, 99, 100).
   static final decimal = CounterStyle.define(
@@ -736,7 +810,7 @@ class PredefinedCounterStyles {
   static final disclosureClosed = CounterStyle.define(
     name: 'disclosure-closed',
     system: System.cyclic,
-    symbols: ['\u25B8'], //TODO for rtl use \u25C2 (◂)
+    symbols: ['\u25B8'], //TODO is it possible to use \u25C2 (◂) in rtl contexts?
     /* ▸ */
     suffix: ' ',
   );
@@ -1625,8 +1699,25 @@ class PredefinedCounterStyles {
     /* ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ */
   );
 
-  //TODO simp-chinese-formal
-  //TODO simp-chinese-informal
+  /// Simplified Chinese formal numbering (e.g. 壹仟壹佰壹拾壹)
+  static final simpChineseFormal = CounterStyle.defineCustomAlgorithm(
+      name: 'simp-chinese-formal',
+      algorithm: (count) => _chineseAlgorithm(count, 'simp-chinese-formal'),
+      suffix: '、',
+      range: IntRange(min: -9999, max: 9999),
+      fallback: 'cjk-decimal',
+      negative: '\u8d1f' // 负
+  );
+
+  /// Simplified Chinese informal numbering (e.g., 一千一百一十一)
+  static final simpChineseInformal = CounterStyle.defineCustomAlgorithm(
+      name: 'simp-chinese-informal',
+      algorithm: (count) => _chineseAlgorithm(count, 'simp-chinese-informal'),
+      suffix: '、',
+      range: IntRange(min: -9999, max: 9999),
+      fallback: 'cjk-decimal',
+      negative: '\u8d1f' // 负
+  );
 
   /// A filled square, similar to ▪ U+25AA BLACK SMALL SQUARE.
   static final square = CounterStyle.define(
@@ -1713,8 +1804,25 @@ class PredefinedCounterStyles {
     /* ༠ ༡ ༢ ༣ ༤ ༥ ༦ ༧ ༨ ༩ */
   );
 
-  //TODO trad-chinese-formal
-  //TODO trad-chinese-informal
+  /// Traditional Chinese formal numbering (e.g., 壹仟壹佰壹拾壹)
+  static final tradChineseFormal = CounterStyle.defineCustomAlgorithm(
+    name: 'trad-chinese-formal',
+    algorithm: (count) => _chineseAlgorithm(count, 'trad-chinese-formal'),
+    range: IntRange(min: -9999, max: 9999),
+    suffix: '、',
+    fallback: 'cjk-decimal',
+    negative: '\u8ca0' // 負
+  );
+
+  /// Traditional Chinese informal numbering (e.g., 一千一百一十一)
+  static final tradChineseInformal = CounterStyle.defineCustomAlgorithm(
+      name: 'trad-chinese-informal',
+      algorithm: (count) => _chineseAlgorithm(count, 'trad-chinese-informal'),
+      range: IntRange(min: -9999, max: 9999),
+      suffix: '、',
+      fallback: 'cjk-decimal',
+      negative: '\u8ca0' // 負
+  );
 
   /// Uppercase ASCII letters (e.g., A, B, C, ..., Z, AA, AB).
   static final upperAlpha = CounterStyle.define(
@@ -1805,4 +1913,90 @@ class PredefinedCounterStyles {
       1: 'I'
     },
   );
+
+  static String _chineseAlgorithm(int count, String algorithm) {
+    const zeroChar = '\u96F6'; // 零
+    bool informal = algorithm.contains("informal");
+    bool trad = algorithm.contains("trad");
+
+    if (count == 0) {
+      return zeroChar;
+    }
+
+    // Initially convert to decimal
+    final initialCharacterList = decimal._algorithm(count).split('');
+
+    List<String> markerList = [];
+
+    // Attach digit markers
+    for (int i = 0; i < initialCharacterList.length; i++) {
+
+      markerList.add(initialCharacterList[i]);
+
+      if (initialCharacterList[i] != '0') {
+        if (initialCharacterList.length - i == 2) {
+          // Add tens digit marker
+          markerList.add(informal? '\u5341': '\u62FE'); // 十 or 拾
+        } else if (initialCharacterList.length - i == 3) {
+          // Add hundreds digit marker
+          markerList.add(informal? '\u767E': '\u4F70'); // 百 or 佰
+        } else if (initialCharacterList.length - i == 4) {
+          // Add thousands digit marker
+          markerList.add(informal? '\u5343': '\u4edf'); // 千 or 仟
+        }
+      }
+    }
+
+    // Remove the tens digit if between 10 and 19 for informal
+    if (informal && (count >= 10 && count <= 19)) {
+      //Remove tens digit
+      markerList.removeAt(0);
+    }
+
+    StringBuffer finalBuffer = StringBuffer();
+    markerList.forEach((character) {
+      switch(character) {
+        case '1':
+          finalBuffer.write(informal? '\u4e00': '\u58f9'); // 一 or 壹
+          break;
+        case '2':
+          finalBuffer.write(informal? '\u4e8c': trad? '\u8cb3': '\u8d30'); // 二 or 貳 or 贰
+          break;
+        case '3':
+          finalBuffer.write(informal? '\u4e09': trad? '\u53c3': '\u53c1'); // 三 or 參 or 叁
+          break;
+        case '4':
+          finalBuffer.write(informal? '\u56db': '\u8086'); // 四 or 肆
+          break;
+        case '5':
+          finalBuffer.write(informal? '\u4e94': '\u4f0d'); // 五 or 伍
+          break;
+        case '6':
+          finalBuffer.write(informal? '\u516d': trad? '\u9678': '\u9646'); // 六 or 陸 or 陆
+          break;
+        case '7':
+          finalBuffer.write(informal? '\u4e03': '\u67d2'); // 七 or 柒
+          break;
+        case '8':
+          finalBuffer.write(informal? '\u516b': '\u634c'); // 八 or 捌
+          break;
+        case '9':
+          finalBuffer.write(informal? '\u4e5d': '\u7396'); // 九 or 玖
+          break;
+        default:
+          finalBuffer.write(character);
+          break;
+      }
+    });
+
+    String processedString = finalBuffer.toString();
+
+    // Remove all trailing zeros
+    processedString = processedString.replaceAll(RegExp(r'(0+)$', multiLine: true), '');
+
+    // Replace all internal zeros with a single zero character
+    processedString = processedString.replaceAll(RegExp(r'0+'), zeroChar);
+
+    return processedString;
+  }
 }

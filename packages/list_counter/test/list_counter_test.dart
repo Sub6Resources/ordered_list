@@ -252,4 +252,29 @@ void main() {
   });
 
   //TODO test fixed, cyclic, complex (once they are added)
+  test('Test simp-chinese-informal', () {
+    final Counter counter = Counter('basic');
+    final styleToUse = PredefinedCounterStyles.simpChineseInformal;
+
+    expect(styleToUse.generateCounterContent(counter.value), equals('零'));
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('一'));
+
+    // Test random known values
+    expect(styleToUse.generateCounterContent(10), equals('十'));
+    expect(styleToUse.generateCounterContent(11), equals('十一'));
+    expect(styleToUse.generateCounterContent(20), equals('二十'));
+    expect(styleToUse.generateCounterContent(27), equals('二十七'));
+    expect(styleToUse.generateCounterContent(63), equals('六十三'));
+    expect(styleToUse.generateCounterContent(100), equals('一百'));
+    expect(styleToUse.generateCounterContent(104), equals('一百零四'));
+    expect(styleToUse.generateCounterContent(519), equals('五百一十九'));
+    expect(styleToUse.generateCounterContent(120), equals('一百二十'));
+
+    //Test a negative value
+    expect(styleToUse.generateCounterContent(-3104), equals('负三千一百零四'));
+
+    //Test an out-of-range value (falls back on cjk-decimal)
+    expect(styleToUse.generateCounterContent(1234560), equals('一二三四五六〇'));
+  });
 }

@@ -16,7 +16,7 @@ Getting started is simple:
 
 ```yaml
 dependencies:
-  ordered_list: ^0.5.0
+  list_counter: ^0.5.0
 ```
 
 ## Usage
@@ -50,13 +50,14 @@ Some of the most basic include:
  - `PredefinedCounterStyles.disc` (A simple bulleted/unordered list)
  - `PredefinedCounterStyles.circle` (A bulleted list with open circles)
  - `PredefinedCounterStyles.square` (A bulleted list with square bullets)
- - `PredefinedCounterStyles.lowerAlpha` (e.g., a, b, c, ..., z, aa, ab)
+ - `PredefinedCounterStyles.lowerAlpha` (a, b, c, ..., z, aa, ab)
 
-As well as dozens of language-specific number systems, such as:
+As well as dozens of language-specific number/alphabet systems, such as:
 
- - `PredefinedCounterStyles.cjkDecimal` (i.e. 〇 一 二 三 四 五 六 七 八 九 ...)
- - `PredefinedCounterStyles.cambodian` (i.e. ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ...)
- - `PredefinedCounterStyles.katakana` (i.e. ア イ ウ エ オ カ キ ク ...)
+ - `PredefinedCounterStyles.cjkDecimal` (〇 一 二 三 四 五 六 七 八 九 ...)
+ - `PredefinedCounterStyles.cambodian` (០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ...)
+ - `PredefinedCounterStyles.katakana` (ア イ ウ エ オ カ キ ク ...)
+ - `PredefinedCounterStyles.koreanHangulFormal` (일천일백일십일 ...)
 
 See https://www.w3.org/TR/css-counter-styles-3/#predefined-counters for the full list.
 
