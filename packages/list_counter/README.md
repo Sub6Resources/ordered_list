@@ -6,9 +6,6 @@ text representation of the given counter's value (such as a 'iv' for 4,
 
 See https://www.w3.org/TR/css-counter-styles-3/#counter-styles for more details.
 
-## Features
-
-
 
 ## Getting started
 
@@ -16,7 +13,7 @@ Getting started is simple:
 
 ```yaml
 dependencies:
-  list_counter: ^0.5.0
+  list_counter: ^1.0.0
 ```
 
 ## Usage
