@@ -1,3 +1,8 @@
+## 1.0.1
+
+* Add static CounterStyleRegistry to keep track of available styles
+* Cleaned up files
+
 ## 1.0.0
 
 * Add Chinese and Ethiopic number systems

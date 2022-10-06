@@ -68,7 +68,7 @@ void main() {
 
   test('Basic CounterStyle test', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.decimal;
+    final styleToUse = PredefinedCounterStyle.decimal;
 
     expect(styleToUse.generateCounterContent(counter.value), equals('0'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('0. '));
@@ -91,7 +91,7 @@ void main() {
 
   test('Padded CounterStyle test', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.decimalLeadingZero;
+    final styleToUse = PredefinedCounterStyle.decimalLeadingZero;
 
     counter.increment();
 
@@ -116,7 +116,7 @@ void main() {
 
   test('Negative padded CounterStyle test', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.decimalLeadingZero;
+    final styleToUse = PredefinedCounterStyle.decimalLeadingZero;
 
     counter.increment(-1);
 
@@ -141,7 +141,7 @@ void main() {
 
   test('Hiragana CounterStyle test', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.hiragana;
+    final styleToUse = PredefinedCounterStyle.hiragana;
 
     counter.increment();
 
@@ -156,7 +156,7 @@ void main() {
 
   test('Alphabetic CounterStyle Wrapping Test', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.lowerAlpha;
+    final styleToUse = PredefinedCounterStyle.lowerAlpha;
 
     counter.increment();
 
@@ -186,7 +186,7 @@ void main() {
 
   test('Counter out of range', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.lowerRoman;
+    final styleToUse = PredefinedCounterStyle.lowerRoman;
 
     counter.increment();
 
@@ -201,7 +201,7 @@ void main() {
 
   test('Test additive system - roman numerals', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.upperRoman;
+    final styleToUse = PredefinedCounterStyle.upperRoman;
 
     counter.increment(); //1
 
@@ -256,7 +256,7 @@ void main() {
 
   test('Test fixed system', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.cjkHeavenlyStem;
+    final styleToUse = PredefinedCounterStyle.cjkHeavenlyStem;
 
     expect(styleToUse.generateCounterContent(counter.value), equals('0'));
 
@@ -296,7 +296,7 @@ void main() {
 
   test('Test cyclic system', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.disc;
+    final styleToUse = PredefinedCounterStyle.disc;
 
     expect(styleToUse.generateCounterContent(counter.value), equals('•'));
     expect(styleToUse.generateMarkerContent(counter.value), equals('• '));
@@ -322,7 +322,7 @@ void main() {
 
   test('Test simp-chinese-informal', () {
     final Counter counter = Counter('basic');
-    final styleToUse = PredefinedCounterStyles.simpChineseInformal;
+    final styleToUse = PredefinedCounterStyle.simpChineseInformal;
 
     expect(styleToUse.generateCounterContent(counter.value), equals('零'));
     counter.increment();
@@ -347,7 +347,7 @@ void main() {
   });
 
   test('Test ethiopic-numeric style', () {
-    final styleToUse = PredefinedCounterStyles.ethiopicNumeric;
+    final styleToUse = PredefinedCounterStyle.ethiopicNumeric;
 
     expect(styleToUse.generateCounterContent(100), equals('፻'));
     expect(styleToUse.generateCounterContent(78010092), equals('፸፰፻፩፼፺፪'));

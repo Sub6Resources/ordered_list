@@ -13,7 +13,7 @@ Getting started is simple:
 
 ```yaml
 dependencies:
-  list_counter: ^1.0.0
+  list_counter: ^1.0.1
 ```
 
 ## Usage
