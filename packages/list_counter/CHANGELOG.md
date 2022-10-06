@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Update README.md
+
 ## 1.0.1
 
 * Add static CounterStyleRegistry to keep track of available styles

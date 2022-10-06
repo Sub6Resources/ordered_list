@@ -13,7 +13,7 @@ Getting started is simple:
 
 ```yaml
 dependencies:
-  list_counter: ^1.0.1
+  list_counter: ^1.0.2
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ dependencies:
 ```dart
 void main() {
   final counter = Counter('named_counter'); //You can also start a counter at a specific integer value with Counter('name', VALUE);
-  final listStyle = PredefinedCounterStyles.upperRoman;
+  final listStyle = PredefinedCounterStyle.upperRoman;
   
   counter.increment(); // Adds 1 to the counter
   print(listStyle.generateMarkerContent(counter.value));
@@ -43,18 +43,19 @@ A lengthy list of predefined counter styles is included!
 
 Some of the most basic include:
 
- - `PredefinedCounterStyles.decimal` (A simple ordered list)
- - `PredefinedCounterStyles.disc` (A simple bulleted/unordered list)
- - `PredefinedCounterStyles.circle` (A bulleted list with open circles)
- - `PredefinedCounterStyles.square` (A bulleted list with square bullets)
- - `PredefinedCounterStyles.lowerAlpha` (a, b, c, ..., z, aa, ab)
+ - `PredefinedCounterStyle.decimal` (A simple ordered list)
+ - `PredefinedCounterStyle.disc` (A simple bulleted/unordered list)
+ - `PredefinedCounterStyle.circle` (A bulleted list with open circles)
+ - `PredefinedCounterStyle.square` (A bulleted list with square bullets)
+ - `PredefinedCounterStyle.lowerAlpha` (a, b, c, ..., z, aa, ab)
 
 As well as dozens of language-specific number/alphabet systems, such as:
 
- - `PredefinedCounterStyles.cjkDecimal` (〇 一 二 三 四 五 六 七 八 九 ...)
- - `PredefinedCounterStyles.cambodian` (០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ...)
- - `PredefinedCounterStyles.katakana` (ア イ ウ エ オ カ キ ク ...)
- - `PredefinedCounterStyles.koreanHangulFormal` (일천일백일십일 ...)
+ - `PredefinedCounterStyle.cjkDecimal` (〇 一 二 三 四 五 六 七 八 九 ...)
+ - `PredefinedCounterStyle.cambodian` (០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ...)
+ - `PredefinedCounterStyle.katakana` (ア イ ウ エ オ カ キ ク ...)
+ - `PredefinedCounterStyle.koreanHangulFormal` (일천일백일십일, etc.)
+ - `PredefinedCounterStyle.simpChineseFormal` (壹仟壹佰壹拾壹, etc.)
 
 See https://www.w3.org/TR/css-counter-styles-3/#predefined-counters for the full list.
 
@@ -82,4 +83,32 @@ final diceStyle = CounterStyle.define(
 ⚅⚄  Eleven
 ⚅⚅  Twelve
 ⚅⚅⚀  Thirteen
+```
+
+## Using the `CounterStyleRegistry`
+
+If wanted, you can also dynamically manage a library of `CounterStyle`s using
+the static `CounterStyleRegistry`. It is automatically filled with all the
+predefined styles.
+
+Here's how it can be used:
+
+```dart
+void main() {
+  // Optionally register your own styles:
+  CounterStyleRegistry.register(myCustomStyle);
+  // You can also overwrite any of the predefined styles:
+  CounterStyleRegistry.register(customDisc); 
+  // customDisc Has name "disc" to overwrite the default style in the registry
+  
+  // Elsewhere...
+  
+  // Lookup your custom style by its name to use it:
+  CounterStyleRegistry.lookup('my-custom-style');
+  // or lookup a predefined style:
+  CounterStyleRegistry.lookup('ethiopic-numeric');
+  
+  // Optionally...
+  CounterStyleRegistry.remove('my-custom-style');
+}
 ```

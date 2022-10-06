@@ -86,4 +86,9 @@ class CounterStyleRegistry {
       register(value);
     }
   }
+
+  /// Remove a CounterStyle from the registry
+  static remove(String name) {
+    _styleMap.remove(name);
+  }
 }
