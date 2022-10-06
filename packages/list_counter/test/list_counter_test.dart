@@ -292,7 +292,6 @@ void main() {
 
     counter.increment();
     expect(styleToUse.generateCounterContent(counter.value), equals('11'));
-
   });
 
   test('Test cyclic system', () {

@@ -221,8 +221,6 @@ class CounterStyle {
 
           return PredefinedCounterStyles.lookup(fallback)._algorithm(count);
       }
-
-      return PredefinedCounterStyles.lookup(fallback)._algorithm(count);
     }
 
     return CounterStyle._(
@@ -769,7 +767,7 @@ class PredefinedCounterStyles {
       suffix: '、',
       fallback: 'cjk-decimal',
       negative: '\u8ca0' // 負
-  );
+      );
 
   /// Western decimal numbers (e.g., 1, 2, 3, ..., 98, 99, 100).
   static final decimal = CounterStyle.define(
@@ -819,7 +817,9 @@ class PredefinedCounterStyles {
   static final disclosureClosed = CounterStyle.define(
     name: 'disclosure-closed',
     system: System.cyclic,
-    symbols: ['\u25B8'], //TODO is it possible to use \u25C2 (◂) in rtl contexts?
+    symbols: [
+      '\u25B8'
+    ], //TODO is it possible to use \u25C2 (◂) in rtl contexts?
     /* ▸ */
     suffix: ' ',
   );
@@ -1722,7 +1722,7 @@ class PredefinedCounterStyles {
       range: IntRange(min: -9999, max: 9999),
       fallback: 'cjk-decimal',
       negative: '\u8d1f' // 负
-  );
+      );
 
   /// Simplified Chinese informal numbering (e.g., 一千一百一十一)
   static final simpChineseInformal = CounterStyle.defineCustomAlgorithm(
@@ -1732,7 +1732,7 @@ class PredefinedCounterStyles {
       range: IntRange(min: -9999, max: 9999),
       fallback: 'cjk-decimal',
       negative: '\u8d1f' // 负
-  );
+      );
 
   /// A filled square, similar to ▪ U+25AA BLACK SMALL SQUARE.
   static final square = CounterStyle.define(
@@ -1821,13 +1821,13 @@ class PredefinedCounterStyles {
 
   /// Traditional Chinese formal numbering (e.g., 壹仟壹佰壹拾壹)
   static final tradChineseFormal = CounterStyle.defineCustomAlgorithm(
-    name: 'trad-chinese-formal',
-    algorithm: (count) => _chineseAlgorithm(count, 'trad-chinese-formal'),
-    range: IntRange(min: -9999, max: 9999),
-    suffix: '、',
-    fallback: 'cjk-decimal',
-    negative: '\u8ca0' // 負
-  );
+      name: 'trad-chinese-formal',
+      algorithm: (count) => _chineseAlgorithm(count, 'trad-chinese-formal'),
+      range: IntRange(min: -9999, max: 9999),
+      suffix: '、',
+      fallback: 'cjk-decimal',
+      negative: '\u8ca0' // 負
+      );
 
   /// Traditional Chinese informal numbering (e.g., 一千一百一十一)
   static final tradChineseInformal = CounterStyle.defineCustomAlgorithm(
@@ -1837,7 +1837,7 @@ class PredefinedCounterStyles {
       suffix: '、',
       fallback: 'cjk-decimal',
       negative: '\u8ca0' // 負
-  );
+      );
 
   /// Uppercase ASCII letters (e.g., A, B, C, ..., Z, AA, AB).
   static final upperAlpha = CounterStyle.define(
@@ -1947,19 +1947,18 @@ class PredefinedCounterStyles {
 
     // Attach digit markers
     for (int i = 0; i < initialCharacterList.length; i++) {
-
       markerList.add(initialCharacterList[i]);
 
       if (initialCharacterList[i] != '0') {
         if (initialCharacterList.length - i == 2) {
           // Add tens digit marker
-          markerList.add(informal? '\u5341': '\u62FE'); // 十 or 拾
+          markerList.add(informal ? '\u5341' : '\u62FE'); // 十 or 拾
         } else if (initialCharacterList.length - i == 3) {
           // Add hundreds digit marker
-          markerList.add(informal? '\u767E': '\u4F70'); // 百 or 佰
+          markerList.add(informal ? '\u767E' : '\u4F70'); // 百 or 佰
         } else if (initialCharacterList.length - i == 4) {
           // Add thousands digit marker
-          markerList.add(informal? '\u5343': '\u4edf'); // 千 or 仟
+          markerList.add(informal ? '\u5343' : '\u4edf'); // 千 or 仟
         }
       }
     }
@@ -1972,33 +1971,45 @@ class PredefinedCounterStyles {
 
     StringBuffer finalBuffer = StringBuffer();
     markerList.forEach((character) {
-      switch(character) {
+      switch (character) {
         case '1':
-          finalBuffer.write(informal? '\u4e00': '\u58f9'); // 一 or 壹
+          finalBuffer.write(informal ? '\u4e00' : '\u58f9'); // 一 or 壹
           break;
         case '2':
-          finalBuffer.write(informal? '\u4e8c': trad? '\u8cb3': '\u8d30'); // 二 or 貳 or 贰
+          finalBuffer.write(informal
+              ? '\u4e8c'
+              : trad
+                  ? '\u8cb3'
+                  : '\u8d30'); // 二 or 貳 or 贰
           break;
         case '3':
-          finalBuffer.write(informal? '\u4e09': trad? '\u53c3': '\u53c1'); // 三 or 參 or 叁
+          finalBuffer.write(informal
+              ? '\u4e09'
+              : trad
+                  ? '\u53c3'
+                  : '\u53c1'); // 三 or 參 or 叁
           break;
         case '4':
-          finalBuffer.write(informal? '\u56db': '\u8086'); // 四 or 肆
+          finalBuffer.write(informal ? '\u56db' : '\u8086'); // 四 or 肆
           break;
         case '5':
-          finalBuffer.write(informal? '\u4e94': '\u4f0d'); // 五 or 伍
+          finalBuffer.write(informal ? '\u4e94' : '\u4f0d'); // 五 or 伍
           break;
         case '6':
-          finalBuffer.write(informal? '\u516d': trad? '\u9678': '\u9646'); // 六 or 陸 or 陆
+          finalBuffer.write(informal
+              ? '\u516d'
+              : trad
+                  ? '\u9678'
+                  : '\u9646'); // 六 or 陸 or 陆
           break;
         case '7':
-          finalBuffer.write(informal? '\u4e03': '\u67d2'); // 七 or 柒
+          finalBuffer.write(informal ? '\u4e03' : '\u67d2'); // 七 or 柒
           break;
         case '8':
-          finalBuffer.write(informal? '\u516b': '\u634c'); // 八 or 捌
+          finalBuffer.write(informal ? '\u516b' : '\u634c'); // 八 or 捌
           break;
         case '9':
-          finalBuffer.write(informal? '\u4e5d': '\u7396'); // 九 or 玖
+          finalBuffer.write(informal ? '\u4e5d' : '\u7396'); // 九 or 玖
           break;
         default:
           finalBuffer.write(character);
@@ -2009,7 +2020,8 @@ class PredefinedCounterStyles {
     String processedString = finalBuffer.toString();
 
     // Remove all trailing zeros
-    processedString = processedString.replaceAll(RegExp(r'(0+)$', multiLine: true), '');
+    processedString =
+        processedString.replaceAll(RegExp(r'(0+)$', multiLine: true), '');
 
     // Replace all internal zeros with a single zero character
     processedString = processedString.replaceAll(RegExp(r'0+'), zeroChar);
@@ -2025,27 +2037,28 @@ class PredefinedCounterStyles {
     final decimalRepresentation = decimal._algorithm(count);
     final List<String> subGroups = [];
 
-    for(int i = 0; i < decimalRepresentation.length; i += 2) {
+    for (int i = 0; i < decimalRepresentation.length; i += 2) {
       int groupEnd = decimalRepresentation.length - i;
       int groupStart = decimalRepresentation.length - i - 2;
 
-      while(groupStart < 0) {
+      while (groupStart < 0) {
         groupStart++;
       }
 
       subGroups.add(decimalRepresentation.substring(groupStart, groupEnd));
     }
 
-    for(int i = 0; i < subGroups.length; i++) {
+    for (int i = 0; i < subGroups.length; i++) {
       bool zeroFlag = int.parse(subGroups[i]) == 0;
-      if(zeroFlag || (i == subGroups.length - 1 && int.parse(subGroups[i]) == 1)) {
+      if (zeroFlag ||
+          (i == subGroups.length - 1 && int.parse(subGroups[i]) == 1)) {
         subGroups[i] = '';
       } else {
         String tensPlace = '';
         String onesPlace = '';
-        for(int j = 0; j < subGroups[i].length; j++) {
-          if(j == 1 || subGroups[i].length == 1) {
-            switch(subGroups[i][j]) {
+        for (int j = 0; j < subGroups[i].length; j++) {
+          if (j == 1 || subGroups[i].length == 1) {
+            switch (subGroups[i][j]) {
               case '1':
                 onesPlace = '\u1369'; // ፩
                 break;
@@ -2053,7 +2066,7 @@ class PredefinedCounterStyles {
                 onesPlace = '\u136a'; // ፪
                 break;
               case '3':
-                onesPlace  = '\u136b'; // ፫
+                onesPlace = '\u136b'; // ፫
                 break;
               case '4':
                 onesPlace = '\u136c'; // ፬
@@ -2074,8 +2087,8 @@ class PredefinedCounterStyles {
                 onesPlace = '\u1371'; // ፱
                 break;
             }
-          } else if(j == 0 && subGroups[i].length != 1) {
-            switch(subGroups[i][j]) {
+          } else if (j == 0 && subGroups[i].length != 1) {
+            switch (subGroups[i][j]) {
               case '1':
                 tensPlace = '\u1372'; // ፲
                 break;
@@ -2083,7 +2096,7 @@ class PredefinedCounterStyles {
                 tensPlace = '\u1373'; // ፳
                 break;
               case '3':
-                tensPlace  = '\u1374'; // ፴
+                tensPlace = '\u1374'; // ፴
                 break;
               case '4':
                 tensPlace = '\u1375'; // ፵
@@ -2109,9 +2122,9 @@ class PredefinedCounterStyles {
         subGroups[i] = '$tensPlace$onesPlace';
       }
 
-      if(i % 2 != 0 && !zeroFlag) {
+      if (i % 2 != 0 && !zeroFlag) {
         subGroups[i] += '\u137B'; // ፻
-      } else if(i % 2 == 0 && i != 0) {
+      } else if (i % 2 == 0 && i != 0) {
         subGroups[i] += '\u137C'; // ፼
       }
     }
