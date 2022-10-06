@@ -70,6 +70,9 @@ void main() {
     final Counter counter = Counter('basic');
     final styleToUse = PredefinedCounterStyles.decimal;
 
+    expect(styleToUse.generateCounterContent(counter.value), equals('0'));
+    expect(styleToUse.generateMarkerContent(counter.value), equals('0. '));
+
     counter.increment();
 
     expect(styleToUse.generateCounterContent(counter.value), equals('1'));
@@ -251,7 +254,73 @@ void main() {
     expect(styleToUse.generateMarkerContent(counter.value), equals('MMXLIX. '));
   });
 
-  //TODO test fixed, cyclic, complex (once they are added)
+  test('Test fixed system', () {
+    final Counter counter = Counter('basic');
+    final styleToUse = PredefinedCounterStyles.cjkHeavenlyStem;
+
+    expect(styleToUse.generateCounterContent(counter.value), equals('0'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('甲'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('乙'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('丙'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('丁'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('戊'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('己'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('庚'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('辛'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('壬'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('癸'));
+
+    counter.increment();
+    expect(styleToUse.generateCounterContent(counter.value), equals('11'));
+
+  });
+
+  test('Test cyclic system', () {
+    final Counter counter = Counter('basic');
+    final styleToUse = PredefinedCounterStyles.disc;
+
+    expect(styleToUse.generateCounterContent(counter.value), equals('•'));
+    expect(styleToUse.generateMarkerContent(counter.value), equals('• '));
+
+    counter.increment();
+
+    expect(styleToUse.generateCounterContent(counter.value), equals('•'));
+    expect(styleToUse.generateMarkerContent(counter.value), equals('• '));
+
+    //Increment an arbitrary amount
+    counter.increment(1464249);
+
+    expect(styleToUse.generateCounterContent(counter.value), equals('•'));
+    expect(styleToUse.generateMarkerContent(counter.value), equals('• '));
+
+    //Now negative
+    counter.reset();
+    counter.increment(-12454);
+
+    expect(styleToUse.generateCounterContent(counter.value), equals('•'));
+    expect(styleToUse.generateMarkerContent(counter.value), equals('• '));
+  });
+
   test('Test simp-chinese-informal', () {
     final Counter counter = Counter('basic');
     final styleToUse = PredefinedCounterStyles.simpChineseInformal;
@@ -276,5 +345,13 @@ void main() {
 
     //Test an out-of-range value (falls back on cjk-decimal)
     expect(styleToUse.generateCounterContent(1234560), equals('一二三四五六〇'));
+  });
+
+  test('Test ethiopic-numeric style', () {
+    final styleToUse = PredefinedCounterStyles.ethiopicNumeric;
+
+    expect(styleToUse.generateCounterContent(100), equals('፻'));
+    expect(styleToUse.generateCounterContent(78010092), equals('፸፰፻፩፼፺፪'));
+    expect(styleToUse.generateCounterContent(780100000092), equals('፸፰፻፩፼፼፺፪'));
   });
 }

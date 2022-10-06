@@ -52,6 +52,8 @@ class CounterStyle {
   final int _padLength;
   final String _padCharacter;
 
+  final bool _usesNegative;
+
   /// a fallback style, to render the representation with when the counter
   /// value is outside the counter style’s range or the counter style otherwise
   /// can’t render the counter value
@@ -66,6 +68,7 @@ class CounterStyle {
     required IntRange range,
     required int padLength,
     required String padCharacter,
+    required bool usesNegative,
     required String fallbackStyle,
   })  : _algorithm = algorithm,
         _negative = negative,
@@ -74,6 +77,7 @@ class CounterStyle {
         _range = range,
         _padLength = padLength,
         _padCharacter = padCharacter,
+        _usesNegative = usesNegative,
         _fallbackStyle = fallbackStyle;
 
   /// A simple way to define CounterStyle. Based off of systems defined at
@@ -158,7 +162,6 @@ class CounterStyle {
           int value = count;
           if (value == 0) {
             result = symbols[0];
-            break;
           }
 
           while (value != 0) {
@@ -231,6 +234,7 @@ class CounterStyle {
       range: range,
       padLength: padLength,
       padCharacter: padCharacter,
+      usesNegative: system.usesNegative,
       fallbackStyle: fallback,
     );
   }
@@ -241,7 +245,8 @@ class CounterStyle {
     required String name,
 
     /// The character to prepend to negative values.
-    String negative = '-',
+    /// If not specified, this system won't use a negative sign
+    String negative = '',
     // TODO add negativeSuffix
 
     /// A prefix to add when generating marker content
@@ -287,6 +292,7 @@ class CounterStyle {
       range: range,
       padLength: padLength,
       padCharacter: padCharacter,
+      usesNegative: negative.isNotEmpty,
       fallbackStyle: fallback,
     );
   }
@@ -307,7 +313,7 @@ class CounterStyle {
 
     final initialCounterContent = _algorithm(count.abs());
 
-    if (count < 0) {
+    if (count < 0 && _usesNegative) {
       final padded = initialCounterContent.padLeft(
           _padLength - _negative.length, _padCharacter);
       return '$_negative$padded';
@@ -356,43 +362,45 @@ enum System {
   /// when it reaches the end of the list.
   ///
   /// See https://www.w3.org/TR/css-counter-styles-3/#cyclic-system
-  cyclic(IntRange.infinite()),
+  cyclic(IntRange.infinite(), false),
 
   /// Interprets the list of symbols as digits to a "place-value" numbering
   /// system (i.e. first symbol represents 0, second represents 1, and so on).
   ///
   /// See https://www.w3.org/TR/css-counter-styles-3/#numeric-system
-  numeric(IntRange.infinite()),
+  numeric(IntRange.infinite(), true),
 
   /// Runs through its list of provided symbols once, then falls back on
   /// the fallback counter style's algorithm.
   ///
   /// See https://www.w3.org/TR/css-counter-styles-3/#fixed-system
-  fixed(IntRange.infinite()),
+  fixed(IntRange.infinite(), false),
 
   /// Interprets the the list of counter symbols as digits to an alphabetic
   /// numbering system. (e.g. a, b, c, ... z, aa, ab, ac, etc.)
   ///
   /// See https://www.w3.org/TR/css-counter-styles-3/#alphabetic-system
-  alphabetic(IntRange(min: 1)),
+  alphabetic(IntRange(min: 1), true),
 
   /// Cycles repeatedly through its provided symbols, doubling, tripling, etc.
   /// the symbols on each successive pass through the list.
   ///
   /// See https://www.w3.org/TR/css-counter-styles-3/#symbolic-system
-  symbolic(IntRange(min: 1)),
+  symbolic(IntRange(min: 1), true),
 
   /// Used to represent "sign-value" numbering systems, where the value of a
   /// number is obtained by adding the digits together. (e.g. Roman numerals)
   ///
   /// See https://www.w3.org/TR/css-counter-styles-3/#additive-system
-  additive(IntRange(min: 0));
+  additive(IntRange(min: 0), true);
 
   /// The default range of the given [System].
   final IntRange range;
 
+  final bool usesNegative;
+
   /// Constructs a System with the given range.
-  const System(this.range);
+  const System(this.range, this.usesNegative);
 }
 
 /// Defines a list of predefined counter-styles
@@ -424,6 +432,7 @@ class PredefinedCounterStyles {
     'disc': disc,
     'disclosure-closed': disclosureClosed,
     'disclosure-open': disclosureOpen,
+    'ethiopic-numeric': ethiopicNumeric,
     'georgian': georgian,
     'gujarati': gujarati,
     'gurmukhi': gurmukhi,
@@ -824,7 +833,13 @@ class PredefinedCounterStyles {
     suffix: ' ',
   );
 
-  //TODO ethiopic-numeric
+  /// Ethiopic numeric counter style
+  static final ethiopicNumeric = CounterStyle.defineCustomAlgorithm(
+    name: 'ethiopic-numeric',
+    algorithm: _ethiopicAlgorithm,
+    range: IntRange(min: 1),
+    suffix: '\u002F\u0020', // "/ "
+  );
 
   /// Traditional Georgian numbering (e.g., ა, ბ, გ, ..., ჟჱ, ჟთ, რ).
   static final georgian = CounterStyle.define(
@@ -1914,6 +1929,8 @@ class PredefinedCounterStyles {
     },
   );
 
+  /// Implements the chinese number system algorithms. For implementation
+  /// details see https://www.w3.org/TR/css-counter-styles-3/#limited-chinese
   static String _chineseAlgorithm(int count, String algorithm) {
     const zeroChar = '\u96F6'; // 零
     bool informal = algorithm.contains("informal");
@@ -1998,5 +2015,107 @@ class PredefinedCounterStyles {
     processedString = processedString.replaceAll(RegExp(r'0+'), zeroChar);
 
     return processedString;
+  }
+
+  /// Implements the ethiopic number system algorithm. For implementation
+  /// details see https://www.w3.org/TR/css-counter-styles-3/#ethiopic-numeric-counter-style
+  static String _ethiopicAlgorithm(int count) {
+    if (count == 1) return '\u1369'; // ፩
+
+    final decimalRepresentation = decimal._algorithm(count);
+    final List<String> subGroups = [];
+
+    for(int i = 0; i < decimalRepresentation.length; i += 2) {
+      int groupEnd = decimalRepresentation.length - i;
+      int groupStart = decimalRepresentation.length - i - 2;
+
+      while(groupStart < 0) {
+        groupStart++;
+      }
+
+      subGroups.add(decimalRepresentation.substring(groupStart, groupEnd));
+    }
+
+    for(int i = 0; i < subGroups.length; i++) {
+      bool zeroFlag = int.parse(subGroups[i]) == 0;
+      if(zeroFlag || (i == subGroups.length - 1 && int.parse(subGroups[i]) == 1)) {
+        subGroups[i] = '';
+      } else {
+        String tensPlace = '';
+        String onesPlace = '';
+        for(int j = 0; j < subGroups[i].length; j++) {
+          if(j == 1 || subGroups[i].length == 1) {
+            switch(subGroups[i][j]) {
+              case '1':
+                onesPlace = '\u1369'; // ፩
+                break;
+              case '2':
+                onesPlace = '\u136a'; // ፪
+                break;
+              case '3':
+                onesPlace  = '\u136b'; // ፫
+                break;
+              case '4':
+                onesPlace = '\u136c'; // ፬
+                break;
+              case '5':
+                onesPlace = '\u136d'; // ፭
+                break;
+              case '6':
+                onesPlace = '\u136e'; // ፮
+                break;
+              case '7':
+                onesPlace = '\u136f'; // ፯
+                break;
+              case '8':
+                onesPlace = '\u1370'; // ፰
+                break;
+              case '9':
+                onesPlace = '\u1371'; // ፱
+                break;
+            }
+          } else if(j == 0 && subGroups[i].length != 1) {
+            switch(subGroups[i][j]) {
+              case '1':
+                tensPlace = '\u1372'; // ፲
+                break;
+              case '2':
+                tensPlace = '\u1373'; // ፳
+                break;
+              case '3':
+                tensPlace  = '\u1374'; // ፴
+                break;
+              case '4':
+                tensPlace = '\u1375'; // ፵
+                break;
+              case '5':
+                tensPlace = '\u1376'; // ፶
+                break;
+              case '6':
+                tensPlace = '\u1377'; // ፷
+                break;
+              case '7':
+                tensPlace = '\u1378'; // ፸
+                break;
+              case '8':
+                tensPlace = '\u1379'; // ፹
+                break;
+              case '9':
+                tensPlace = '\u137a'; // ፺
+                break;
+            }
+          }
+        }
+        subGroups[i] = '$tensPlace$onesPlace';
+      }
+
+      if(i % 2 != 0 && !zeroFlag) {
+        subGroups[i] += '\u137B'; // ፻
+      } else if(i % 2 == 0 && i != 0) {
+        subGroups[i] += '\u137C'; // ፼
+      }
+    }
+
+    return subGroups.reversed.join('');
   }
 }
